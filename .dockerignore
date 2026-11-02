@@ -1,0 +1,6 @@
+# Files Docker should not copy into the image when building
+.git
+.venv
+__pycache__
+*.npy
+*.png

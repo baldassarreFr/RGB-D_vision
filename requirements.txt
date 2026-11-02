@@ -1,0 +1,4 @@
+# Unpinned for the first build; pin exact versions once it works (see `pip freeze`).
+numpy
+open3d-cpu
+matplotlib
