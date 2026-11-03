@@ -6,34 +6,15 @@ as separate functions applied on top of this image.
 import numpy as np
 import open3d as o3d
 import matplotlib.pyplot as plt
+from camera import W, H, intrinsics, look_at
+
 
 # ---------- 1. Camera intrinsics (D435 depth stream at 848x480) ----------
-W, H = 848, 480                                   # image size in pixels
-HFOV_DEG = 87.0                                   # horizontal field of view (Intel spec, +/- 3 deg)
-fx = (W / 2) / np.tan(np.deg2rad(HFOV_DEG) / 2)   # focal length in pixels (~447)
-fy = fx                                           # square pixels
-cx, cy = W / 2, H / 2                             # principal point = image centre (idealised)
-K = np.array([[fx, 0.0, cx],
-              [0.0, fy, cy],
-              [0.0, 0.0, 1.0]])
+K = intrinsics()
+fx = K[0, 0]                        # focal length in pixels (~447 px)
 
 
 # ---------- 2. Camera pose: where the camera is and where it looks ----------
-def look_at(eye, target, up=(0, 0, 1)):
-    """World->camera 4x4 matrix. OpenCV convention: x right, y down, z forward."""
-    eye, target, up = (np.asarray(v, dtype=float) for v in (eye, target, up))
-    z = target - eye
-    z /= np.linalg.norm(z)          # forward: from the camera towards the target
-    x = np.cross(z, up)
-    x /= np.linalg.norm(x)          # right
-    y = np.cross(z, x)              # down
-    R = np.stack([x, y, z])         # rows = camera axes expressed in world coordinates
-    T = np.eye(4)
-    T[:3, :3] = R
-    T[:3, 3] = -R @ eye             # so that the camera centre maps to (0, 0, 0)
-    return T
-
-
 eye = np.array([0.0, -0.35, 0.55])  # 35 cm in front of the origin, 55 cm above the table
 extrinsic = look_at(eye, target=(0, 0, 0))
 
