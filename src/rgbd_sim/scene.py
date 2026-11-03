@@ -32,13 +32,18 @@ def make_table():
     return table
 
 
-def generate_scene(seed):
-    """Build one scene. The seed decides everything: part count, drop poses, result."""
-    # 1. Which parts, and where they come to rest.
+def choose_parts(seed):
+    """Which parts are in the scene with this seed: 1-2 profiles and 1-4 brackets."""
     rng = np.random.default_rng(seed)
     n_profiles = int(rng.integers(1, 3))            # 1 or 2
     n_brackets = int(rng.integers(1, 5))            # 1 to 4
-    names = ["profile"] * n_profiles + ["bracket"] * n_brackets
+    return ["profile"] * n_profiles + ["bracket"] * n_brackets
+
+
+def generate_scene(seed):
+    """Build one scene. The seed decides everything: part count, drop poses, result."""
+    # 1. Which parts, and where they come to rest.
+    names = choose_parts(seed)
     meshes = [MAKE_PART[n]() for n in names]
     poses, physics_info = drop_parts(names, meshes, seed=seed)
     placed = []

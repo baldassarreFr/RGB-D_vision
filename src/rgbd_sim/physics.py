@@ -1,27 +1,37 @@
-"""
-Physics drop: let the parts fall on the table and settle, to get realistic resting poses.
+"""Physics drop: let the parts fall on the table and settle, to get realistic resting poses.
+
+The physics engine only needs simple collision shapes, not the detailed meshes:
+- profile: one box (its slots do not change how it lies on a table);
+- bracket: two boxes, one per leg of the L. A single box, or the convex hull,
+  would fill the inside of the L and make the bracket rest in impossible poses.
 """
 import numpy as np
 import pybullet as p
 from trimesh.transformations import random_rotation_matrix, quaternion_from_matrix
 
-from rgbd_sim.parts import (MM, PROFILE_SIZE, PROFILE_LENGTH, BRACKET_LEG, BRACKET_THICKNESS, BRACKET_WIDTH)
+from rgbd_sim.parts import (MM, PROFILE_SIZE, PROFILE_LENGTH,
+                   BRACKET_LEG, BRACKET_THICKNESS, BRACKET_WIDTH)
 
 ALUMINIUM_DENSITY = 2700.0      # kg/m^3
 TIME_STEP = 1.0 / 240.0         # PyBullet's default simulation step, in seconds
+RESTITUTION = 0.0               # bounciness of the parts: 0 = no bounce, 1 = perfectly elastic
 
-# Range from which the parts are dropped from (in meters, in world x and y)
+PART_FRICTION = 0.6             
+TABLE_FRICTION = 0.5            
+TABLE_RESTITUTION = 1.0        
+
+# Where parts are dropped from (world x, y, metres): the central part of the camera view.
 DROP_X = (-0.15, 0.15)
 DROP_Y = (-0.12, 0.15)
-MIN_SPACING = 0.09              # minimum distance between two drop points (metres)
+MIN_SPACING = 0.09              # minimum distance between two drop points, metres
 
 
 def drop_points(n, rng, tries=1000):
-    """
-    Samples n (x, y) drop points, at least MIN_SPACING apart from each other.
+    """n random (x, y) drop points, at least MIN_SPACING apart from each other.
 
-    A sampled random point is keep only if it is far enough (>= MIN_SPACING) from the points already kept.
-    To avoid an infinite loop, the function gives up after 'tries' attempts to find a new point.
+    Rejection sampling: draw a random point, keep it only if it is far enough
+    from the points already kept. Gives up (and accepts closer points) after
+    `tries` attempts, so it never loops forever.
     """
     points = []
     for _ in range(tries):
@@ -47,7 +57,7 @@ def collision_boxes(name):
     raise ValueError(f"unknown part: {name}")
 
 
-def drop_parts(names, meshes, seed, max_seconds=10.0):
+def drop_parts(names, meshes, seed, max_seconds=10.0, restitution=RESTITUTION):
     """Drop the parts from random poses above the table and simulate until they stop.
 
     names:   e.g. ["profile", "bracket", "bracket"]
@@ -58,7 +68,10 @@ def drop_parts(names, meshes, seed, max_seconds=10.0):
     client = p.connect(p.DIRECT)                    # physics only, no window
     p.setGravity(0, 0, -9.81, physicsClientId=client)
     plane = p.createCollisionShape(p.GEOM_PLANE, physicsClientId=client)
-    p.createMultiBody(0, plane, physicsClientId=client)    # mass 0 = fixed: table top at z = 0
+    table = p.createMultiBody(0, plane, physicsClientId=client)   # mass 0 = fixed: table top at z = 0
+    
+    p.changeDynamics(table, -1, lateralFriction=TABLE_FRICTION, restitution=TABLE_RESTITUTION,
+                     physicsClientId=client)
 
     xy = drop_points(len(names), rng)               # one separate drop point per part
     bodies, coms = [], []
@@ -74,7 +87,7 @@ def drop_parts(names, meshes, seed, max_seconds=10.0):
             physicsClientId=client)
 
         # Random starting pose: random rotation, its own drop point, and each part a bit
-        # higher than the previous one, as extra safety against starting inside each other
+        # higher than the previous one, as extra safety against starting inside each other.
         R0 = random_rotation_matrix(rng.random(3))
         q = quaternion_from_matrix(R0)              # trimesh order:  w, x, y, z
         start = [xy[i][0], xy[i][1], 0.06 + 0.06 * i]
@@ -84,7 +97,8 @@ def drop_parts(names, meshes, seed, max_seconds=10.0):
             basePosition=start,
             baseOrientation=[q[1], q[2], q[3], q[0]],    # PyBullet order: x, y, z, w
             physicsClientId=client)
-        p.changeDynamics(body, -1, lateralFriction=0.6, physicsClientId=client)
+        p.changeDynamics(body, -1, lateralFriction=PART_FRICTION, restitution=restitution,
+                         physicsClientId=client)
         bodies.append(body)
         coms.append(com)
 

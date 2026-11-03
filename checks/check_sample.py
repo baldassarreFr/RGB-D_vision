@@ -1,4 +1,5 @@
-"""Generate one complete scene, save it, load it back, and check it end to end.
+"""
+Generate one complete scene, save it, load it back, and check it end to end.
 
 Usage: python check_sample.py [seed]
 Checks:
