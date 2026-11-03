@@ -5,7 +5,7 @@ import numpy as np
 import pybullet as p
 from trimesh.transformations import random_rotation_matrix, quaternion_from_matrix
 
-from parts import (MM, PROFILE_SIZE, PROFILE_LENGTH, BRACKET_LEG, BRACKET_THICKNESS, BRACKET_WIDTH)
+from rgbd_sim.parts import (MM, PROFILE_SIZE, PROFILE_LENGTH, BRACKET_LEG, BRACKET_THICKNESS, BRACKET_WIDTH)
 
 ALUMINIUM_DENSITY = 2700.0      # kg/m^3
 TIME_STEP = 1.0 / 240.0         # PyBullet's default simulation step, in seconds

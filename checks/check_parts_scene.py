@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 import trimesh
 from trimesh.transformations import rotation_matrix, translation_matrix
 
-from camera import W, H, intrinsics, look_at, backproject, camera_to_world
-from parts import make_profile, make_bracket
-from render import render_ideal
+from rgbd_sim.camera import W, H, intrinsics, look_at, backproject, camera_to_world
+from rgbd_sim.parts import make_profile, make_bracket
+from rgbd_sim.render import render_ideal
 
 # Camera
 K = intrinsics()

@@ -1,6 +1,8 @@
 {
+  // Tells VS Code how to build the container and connect to it.
   "name": "RGB-D vision",
 
+  // Use the project's own Dockerfile (one folder up from .devcontainer/)
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."
@@ -13,9 +15,9 @@
     }
   },
 
-  // Runs every time the container starts:
-  // 1) trust this repo even though its files belong to a Windows user
-  // 2) ignore the "executable" flag that Windows folders show for every file
-  //    (the path is quoted because the folder name may contain spaces)
+  // Runs once to install the package from THIS folder
+  "postCreateCommand": "pip install -e .",
+
+  // Runs every time the container starts
   "postStartCommand": "git config --global --add safe.directory \"${containerWorkspaceFolder}\" && git config core.fileMode false"
 }

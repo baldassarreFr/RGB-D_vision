@@ -1,6 +1,10 @@
+# Python cache files
 __pycache__/
 
-# Generated data and images
+# Generated data and images (re-created by running the scripts)
 *.npy
 outputs/
 first_depth.png
+
+# Created by "pip install -e ."
+*.egg-info/

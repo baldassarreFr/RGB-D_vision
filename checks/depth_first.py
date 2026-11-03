@@ -6,7 +6,7 @@ as separate functions applied on top of this image.
 import numpy as np
 import open3d as o3d
 import matplotlib.pyplot as plt
-from camera import W, H, intrinsics, look_at
+from rgbd_sim.camera import W, H, intrinsics, look_at
 
 
 # ---------- 1. Camera intrinsics (D435 depth stream at 848x480) ----------

@@ -7,7 +7,7 @@ Ground truth: table top at z = 0; bar 200 x 40 x 40 mm, centred at the origin.
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from camera import intrinsics, look_at, backproject, camera_to_world
+from rgbd_sim.camera import intrinsics, look_at, backproject, camera_to_world
 
 # Same camera as depth_first.py
 K = intrinsics()

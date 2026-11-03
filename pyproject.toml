@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rgbd-sim"
+version = "0.1.0"
+description = "Synthetic RGB-D scenes of aluminium parts with a RealSense D435i depth model"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -9,10 +9,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import trimesh
 
-from camera import W, H, intrinsics, look_at
-from parts import make_profile, make_bracket
-from physics import drop_parts
-from render import render_ideal
+from rgbd_sim.camera import W, H, intrinsics, look_at
+from rgbd_sim.parts import make_profile, make_bracket
+from rgbd_sim.physics import drop_parts
+from rgbd_sim.render import render_ideal
 
 seed = int(sys.argv[1]) if len(sys.argv) > 1 else 0
 
