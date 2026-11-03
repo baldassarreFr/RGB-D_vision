@@ -1,0 +1,6 @@
+__pycache__/
+
+# Generated data and images
+*.npy
+outputs/
+first_depth.png
