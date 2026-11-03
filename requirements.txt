@@ -1,8 +1,8 @@
-# Unpinned for the first build; pin exact versions once it works (see `pip freeze`).
 numpy
-open3d-cpu
-matplotlib
-trimesh          # build and check 3D meshes (extrusion, volume, watertightness)
-shapely          # 2D shapes: draw the cross-sections of the parts
-mapbox_earcut    # splits a 2D shape into triangles; trimesh needs it for extrusion
-pybullet         # physics: drop parts on the table (M3)
+mapbox_earcut==2.1.0
+matplotlib==3.11.2
+numpy==2.4.6
+open3d-cpu==0.20.0
+pybullet==3.2.7
+shapely==2.2.0
+trimesh==5.2.0
