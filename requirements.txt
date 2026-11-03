@@ -2,3 +2,7 @@
 numpy
 open3d-cpu
 matplotlib
+trimesh          # build and check 3D meshes (extrusion, volume, watertightness)
+shapely          # 2D shapes: draw the cross-sections of the parts
+mapbox_earcut    # splits a 2D shape into triangles; trimesh needs it for extrusion
+pybullet         # physics: drop parts on the table (M3)
