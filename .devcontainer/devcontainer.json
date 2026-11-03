@@ -1,0 +1,21 @@
+{
+  "name": "RGB-D vision",
+
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+
+  // VS Code extensions to install INSIDE the container
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python"]
+    }
+  },
+
+  // Runs every time the container starts:
+  // 1) trust this repo even though its files belong to a Windows user
+  // 2) ignore the "executable" flag that Windows folders show for every file
+  //    (the path is quoted because the folder name may contain spaces)
+  "postStartCommand": "git config --global --add safe.directory \"${containerWorkspaceFolder}\" && git config core.fileMode false"
+}
