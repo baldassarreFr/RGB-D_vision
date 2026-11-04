@@ -90,6 +90,16 @@ def generate_scene(seed):
     return {"rgb": rgb, "depth": depth, "label": label, "normals": normals, "meta": meta}
 
 
+def scene_meshes(meta):
+    """Rebuild the scene's meshes (table first, then the parts) from meta.json alone."""
+    meshes = [make_table()]
+    for obj in meta["objects"]:
+        mesh = MAKE_PART[obj["class"]]()
+        mesh.apply_transform(np.array(obj["pose_world"]))
+        meshes.append(mesh)
+    return meshes
+
+
 def save_scene(scene, folder):
     os.makedirs(folder, exist_ok=True)
     depth_units = np.round(scene["depth"] / DEPTH_SCALE)
