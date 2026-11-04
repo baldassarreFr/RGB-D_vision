@@ -20,13 +20,21 @@ specifications [S4]). Nothing is invented: an effect without a measured value is
 | 5 | Base noise (matte surface, seen face-on) | sigma_z = z^2 x 0.08 / (fx x b) -> 0.9 / 1.5 / 3.0 mm at 0.49 / 0.65 / 0.92 m | formula [S3]; about 1-2 mm at 60-70 cm measured with our exact settings [R1, Fig. 5] |
 | 6 | Material factor: aluminium (parts) | x 2.9 (range 2.5 - 3.3 across lighting) | [R2], Fig. 6, D435 at 1 m, aluminium vs foam/paper/plastics, read from the figure |
 | 7 | Material factor: table | x 1 (matte work surface) | **scene choice**, not a camera parameter |
-| 8 | Edge artifacts | edges displaced by up to 1 px | [R2], Table 2: D435 lateral noise 1 px at 0 - 3 m |
+| 8 | Edge artifacts: size | edges displaced by up to 1 px | [R2], Table 2: D435 lateral noise 1 px at 0 - 3 m (maximum distance of edge pixels from the true straight edge) |
+| 9 | Edge artifacts: how often | each pixel on an object outline takes its neighbour's depth with probability 1/2 | **our choice**: [R2] gives the maximum displacement only; 1/2 = edge equally likely to move either way |
+
+Numerical tolerance in `camera_model.py` (geometry bookkeeping, **not** a camera parameter):
+a point counts as seen by the right imager unless something is more than 1 mm in front of it
+(stored depth is rounded to 0.1 mm). Edges are found from the labels (outline of each object),
+with no threshold.
 
 ## 2. Left out, and why
 
 | Effect | Reason |
 |---|---|
 | Noise growing with the incidence angle | the only model for this camera, Ahn et al. Eq. 2 [R3] (fitted on a white wall, 0.4 - 2.1 m, 0 - 75 deg; angle term "heuristically obtained"), gives on our scene 0 a median sigma of **44 mm** on part faces seen at >= 45 deg (128 mm with the aluminium factor), i.e. more than the size of the parts. This contradicts object-level measurements with the same camera at 60 cm (mean Chamfer distance about 0.6 - 0.9 cm, [R1] Fig. 14). No reliable value -> not modelled (checks/check_noise.py, 4 Nov) |
+| Mixed depths at edges ("flying pixels" between foreground and background) | no measurement for this camera; edges are only displaced, never blended |
+| Edges inside one object (rim of a slot, one bracket leg in front of the other) | simplification: only object outlines move (edges found from labels, no threshold); slots still lose depth through the stereo shadows |
 | Range limits (min ~0.17-0.3 m, max ~3 m) | never reached: scene depth is 0.49 - 0.92 m [S2, S3] |
 | Holes / glare on aluminium at oblique angles | no measurement for this camera: [R2] tested materials face-on only and lists angles as future work |
 | Holes on aluminium in very bright light | seen in [R2] (no value at 535 lux, 1 m) but not explained and not seen at 1.5 m; mentioned, not modelled |

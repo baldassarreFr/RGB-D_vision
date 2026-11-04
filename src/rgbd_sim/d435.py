@@ -18,8 +18,10 @@ MATERIAL_NOISE_FACTOR = {
     "table": 1.0,                  # matte work surface: scene choice
 }
 
-# Row 8 - edge artifacts
+# Rows 8-9 - edge artifacts
 EDGE_SHIFT_PX = 1                  # Halmetschlager-Funek et al. 2019, Table 2 (D435, 0-3 m)
+EDGE_SHIFT_PROBABILITY = 0.5       # OUR CHOICE: the source gives the maximum displacement, not
+                                   # how often it happens; 1/2 = no preferred side
 
 
 def base_noise_m(z, fx):
