@@ -1,18 +1,18 @@
 """Camera model shared by all scripts: D435-like depth intrinsics, camera pose,
 and conversion between depth pixels and 3D points.
 
-Conventions:
+Conventions (same as depth_first.py):
 - World frame: table top is the plane z = 0, z points up. Units: metres.
 - Camera frame (OpenCV): x right, y down, z forward (out of the lens).
-- Each pixel (col, row) has its centre at (col + 0.5, row + 0.5), as in Open3D's ray caster.
+- Pixel (col, row) has its centre at (col + 0.5, row + 0.5), as in Open3D's ray caster.
 - Depth images store z-depth in metres; 0 means "no data".
 """
-
 import numpy as np
 
 W, H = 848, 480          # D435 depth stream resolution used in this project
-
-# Horizontal depth field of view of the D435i (https://www.intel.com/content/www/us/en/products/sku/190004/intel-realsense-depth-camera-d435i/specifications.html)
+# Horizontal depth field of view of the D435i (Intel product page, "H:87 V:58"):
+# https://www.intel.com/content/www/us/en/products/sku/190004/intel-realsense-depth-camera-d435i/specifications.html
+# Other Intel sources give 85.2 deg (D435 page, product brief: +/- 3 deg); real units vary.
 HFOV_DEG = 87.0
 
 
@@ -61,6 +61,21 @@ def camera_to_world(points_cam, extrinsic):
     """
     R = extrinsic[:3, :3]
     t = extrinsic[:3, 3]
-    p = (points_cam - t).reshape(-1, 3).T        # (3, N): one point per column
+    p = (points_cam - t).reshape(-1, 3).T        # (3, N): one point per column, like in the formula
     p_world = R.T @ p                            # the textbook formula
     return p_world.T.reshape(points_cam.shape)   # back to the input shape, e.g. (H, W, 3)
+
+
+def incidence_angle(depth, normals, K, extrinsic):
+    """Angle (radians) between each pixel's surface normal and its line of sight.
+
+    0 = surface seen face-on, pi/2 = seen edge-on. NaN where there is no depth.
+    normals: (H, W, 3) unit normals in world coordinates.
+    """
+    points = camera_to_world(backproject(depth, K), extrinsic)     # (H, W, 3), world frame
+    centre = camera_to_world(np.zeros(3), extrinsic)                 # camera centre, world frame
+    with np.errstate(invalid="ignore"):
+        to_camera = centre - points
+        to_camera /= np.linalg.norm(to_camera, axis=-1, keepdims=True)
+        cos = np.abs(np.sum(normals * to_camera, axis=-1))           # abs: robust to flipped normals
+    return np.arccos(np.clip(cos, 0.0, 1.0))

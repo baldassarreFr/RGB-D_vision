@@ -4,7 +4,8 @@ Folder of a saved scene:
   rgb.png    8-bit colour image (H, W, 3)
   depth.png  16-bit depth; value * depth_scale_m (in meta.json) = metres; 0 = no data
   label.png  8-bit instance ids: 0 = nothing, 1 = table, 2.. = parts (see meta.json)
-  meta.json  camera parameters, and for every part: its class and its true pose
+  meta.json  camera parameters, and for every part: its class, material and true pose
+  normals.npz  surface normal seen by each pixel, world frame, (H, W, 3) float16; 0 = no hit
 """
 import json
 import os
@@ -67,6 +68,7 @@ def generate_scene(seed):
         objects.append({
             "instance_id": instance,
             "class": name,
+            "material": MATERIAL[name],
             "pose_world": pose.tolist(),                 # model -> world
             "pose_camera": (extrinsic @ pose).tolist(),  # model -> camera: what pose estimation must find
             "visible_pixels": int((label == instance).sum()),
@@ -81,10 +83,11 @@ def generate_scene(seed):
             "depth_scale_m": DEPTH_SCALE,
         },
         "table_instance_id": 1,
+        "table_material": MATERIAL["table"],
         "objects": objects,
         "physics": physics_info,
     }
-    return {"rgb": rgb, "depth": depth, "label": label, "meta": meta}
+    return {"rgb": rgb, "depth": depth, "label": label, "normals": normals, "meta": meta}
 
 
 def save_scene(scene, folder):
@@ -94,6 +97,8 @@ def save_scene(scene, folder):
     Image.fromarray(scene["rgb"]).save(os.path.join(folder, "rgb.png"))
     Image.fromarray(depth_units.astype(np.uint16)).save(os.path.join(folder, "depth.png"))
     Image.fromarray(scene["label"]).save(os.path.join(folder, "label.png"))
+    np.savez_compressed(os.path.join(folder, "normals.npz"),
+                        normals=scene["normals"].astype(np.float16))   # float16: ~0.001 precision
     with open(os.path.join(folder, "meta.json"), "w") as f:
         json.dump(scene["meta"], f, indent=2)
 
@@ -106,6 +111,7 @@ def load_scene(folder):
         "rgb": np.array(Image.open(os.path.join(folder, "rgb.png"))),
         "depth": depth_units.astype(np.float32) * meta["camera"]["depth_scale_m"],
         "label": np.array(Image.open(os.path.join(folder, "label.png"))),
+        "normals": np.load(os.path.join(folder, "normals.npz"))["normals"].astype(np.float32),
         "meta": meta,
     }
 
