@@ -22,7 +22,6 @@ from rgbd_sim.scene import scene_meshes
 VISIBILITY_TOLERANCE_M = 0.001
 
 
-
 def material_factor_image(label, meta):
     """(H, W) noise factor of each pixel's material: 1 for the matte table, 2.9 for aluminium."""
     factor = np.ones(label.shape)
@@ -32,13 +31,15 @@ def material_factor_image(label, meta):
     return factor
 
 
-def noise_sigma(scene, material=True):
+def noise_sigma(scene, material=True, depth=None):
     """(H, W) standard deviation of the depth noise of every pixel, in metres (0 = no depth).
 
     sigma = base(z)               Intel formula, matte surface seen face-on
             x material factor     if material: 2.9 on aluminium (Halmetschlager-Funek)
+    depth: the depth to compute it for (default: the scene's ideal depth).
     """
-    depth, meta = scene["depth"], scene["meta"]
+    meta = scene["meta"]
+    depth = scene["depth"] if depth is None else depth
     K = np.array(meta["camera"]["K"])
     valid = depth > 0
 
@@ -120,3 +121,36 @@ def shift_edges(depth, label, rng):
     across[:k, :] = across[-k:, :] = across[:, :k] = across[:, -k:] = 0
     move = (across > 0) & (rng.random(depth.shape) < d435.EDGE_SHIFT_PROBABILITY)
     return np.where(move, across, depth).astype(np.float32), move
+
+
+
+# The camera conditions of the experiment: which effects are switched on.
+VARIANTS = {
+    "ideal":     dict(edges=False, shadows=False, noise=False, aluminium=False),
+    "noise":     dict(edges=False, shadows=False, noise=True,  aluminium=False),  # Intel base noise only
+    "aluminium": dict(edges=False, shadows=False, noise=True,  aluminium=True),   # noise x2.9 on parts
+    "shadows":   dict(edges=False, shadows=True,  noise=False, aluminium=False),
+    "edges":     dict(edges=True,  shadows=False, noise=False, aluminium=False),
+    "full":      dict(edges=True,  shadows=True,  noise=True,  aluminium=True),   # the D435i model
+}
+
+
+def apply_camera(scene, edges, shadows, noise, aluminium, rng):
+    """Ideal depth -> depth as the D435i would measure it, with the chosen effects.
+
+    Order: geometry first, then the random error on what is left.
+      1. edges:   object outlines move by up to 1 px          (Halmetschlager-Funek, Table 2)
+      2. shadows: pixels the right imager cannot see -> 0     (geometry, baseline 50 mm)
+      3. noise:   random error of size sigma on every pixel   (Intel formula; x2.9 on aluminium)
+    The stereo shadows are computed from the ideal scene geometry. The material of a pixel is
+    taken from the ideal labels, also where an edge moved by one pixel.
+    """
+    depth = scene["depth"].copy()
+    if edges:
+        depth, _ = shift_edges(depth, scene["label"], rng)
+    if shadows:
+        depth[stereo_shadow_mask(scene)] = 0.0
+    if noise:
+        sigma = noise_sigma(scene, material=aluminium, depth=depth)
+        depth = add_noise(depth, sigma, rng)
+    return depth.astype(np.float32)

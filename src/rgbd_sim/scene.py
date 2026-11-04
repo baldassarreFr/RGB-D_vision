@@ -3,6 +3,7 @@
 Folder of a saved scene:
   rgb.png    8-bit colour image (H, W, 3)
   depth.png  16-bit depth; value * depth_scale_m (in meta.json) = metres; 0 = no data
+  depth_<variant>.png  the same depth as the D435i would measure it (scripts/make_camera_variants.py)
   label.png  8-bit instance ids: 0 = nothing, 1 = table, 2.. = parts (see meta.json)
   meta.json  camera parameters, and for every part: its class, material and true pose
   normals.npz  surface normal seen by each pixel, world frame, (H, W, 3) float16; 0 = no hit
@@ -100,12 +101,25 @@ def scene_meshes(meta):
     return meshes
 
 
+def save_depth(depth, path):
+    """Depth in metres -> 16-bit PNG in units of DEPTH_SCALE (0 = no data)."""
+    depth_units = np.round(np.clip(depth, 0, None) / DEPTH_SCALE)
+    assert depth_units.max() < 2**16, "depth too large for 16 bits at this scale"
+    Image.fromarray(depth_units.astype(np.uint16)).save(path)
+
+
+def load_depth(folder, variant="ideal"):
+    """Depth in metres of one camera variant of a saved scene ("ideal" = depth.png)."""
+    name = "depth.png" if variant == "ideal" else f"depth_{variant}.png"
+    with open(os.path.join(folder, "meta.json")) as f:
+        scale = json.load(f)["camera"]["depth_scale_m"]
+    return np.array(Image.open(os.path.join(folder, name))).astype(np.float32) * scale
+
+
 def save_scene(scene, folder):
     os.makedirs(folder, exist_ok=True)
-    depth_units = np.round(scene["depth"] / DEPTH_SCALE)
-    assert depth_units.max() < 2**16, "depth too large for 16 bits at this scale"
     Image.fromarray(scene["rgb"]).save(os.path.join(folder, "rgb.png"))
-    Image.fromarray(depth_units.astype(np.uint16)).save(os.path.join(folder, "depth.png"))
+    save_depth(scene["depth"], os.path.join(folder, "depth.png"))
     Image.fromarray(scene["label"]).save(os.path.join(folder, "label.png"))
     np.savez_compressed(os.path.join(folder, "normals.npz"),
                         normals=scene["normals"].astype(np.float16))   # float16: ~0.001 precision
