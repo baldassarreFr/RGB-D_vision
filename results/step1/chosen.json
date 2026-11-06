@@ -1,0 +1,50 @@
+{
+  "tuned_on_ideal": {
+    "bracket": {
+      "voxel_mm": 3,
+      "tolerance_mm": 16,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.9785972111496605,
+      "median_add_s_mm": 0.003879704991049948,
+      "median_centre_mm": 0.008295282344315749,
+      "median_rotation_deg": 0.020808425884631186,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 6,
+      "tolerance_mm": 1,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.999395844329895,
+      "median_add_s_mm": 0.0052055379455850925,
+      "median_centre_mm": 0.015439790194787443,
+      "median_rotation_deg": 0.008257577602646485,
+      "errors": 0
+    }
+  },
+  "tuned_on_full": {
+    "bracket": {
+      "voxel_mm": 4,
+      "tolerance_mm": 12,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.8346512415296816,
+      "median_add_s_mm": 1.0655015939846635,
+      "median_centre_mm": 1.9303317669874978,
+      "median_rotation_deg": 2.280354185615546,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 8,
+      "tolerance_mm": 2,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.9554445164648288,
+      "median_add_s_mm": 0.6698204088024795,
+      "median_centre_mm": 1.3203496620708541,
+      "median_rotation_deg": 0.631568678374922,
+      "errors": 0
+    }
+  }
+}
