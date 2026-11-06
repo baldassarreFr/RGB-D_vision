@@ -23,7 +23,7 @@
       "errors": 0
     }
   },
-  "tuned_on_full": {
+  "tuned_on_realistic": {
     "bracket": {
       "voxel_mm": 4,
       "tolerance_mm": 12,

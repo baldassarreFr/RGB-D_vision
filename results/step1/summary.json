@@ -1,0 +1,326 @@
+{
+  "tuned_on_ideal|ideal|all": {
+    "n": 420,
+    "success_rate": 0.9928571428571429,
+    "auc": 0.9688848011173091,
+    "median_add_s_mm": 0.004334408004069701,
+    "median_centre_mm": 0.010059243903772733,
+    "median_rotation_deg": 0.014203551185955832,
+    "errors": 0
+  },
+  "tuned_on_ideal|ideal|bracket": {
+    "n": 267,
+    "success_rate": 0.9887640449438202,
+    "auc": 0.9541127660778896,
+    "median_add_s_mm": 0.00402106797992019,
+    "median_centre_mm": 0.00897316123896067,
+    "median_rotation_deg": 0.020261596833800057,
+    "errors": 0
+  },
+  "tuned_on_ideal|ideal|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9946634504998255,
+    "median_add_s_mm": 0.004849388460570481,
+    "median_centre_mm": 0.012283748825884053,
+    "median_rotation_deg": 0.0086584756405923,
+    "errors": 0
+  },
+  "tuned_on_ideal|noise|all": {
+    "n": 420,
+    "success_rate": 0.9714285714285714,
+    "auc": 0.9307864458071693,
+    "median_add_s_mm": 0.16849517851369455,
+    "median_centre_mm": 0.43740696448918404,
+    "median_rotation_deg": 0.39825991635450897,
+    "errors": 0
+  },
+  "tuned_on_ideal|noise|bracket": {
+    "n": 267,
+    "success_rate": 0.9550561797752809,
+    "auc": 0.8977748251614341,
+    "median_add_s_mm": 0.26321946643292904,
+    "median_centre_mm": 0.6119744193610559,
+    "median_rotation_deg": 0.6307936927683664,
+    "errors": 0
+  },
+  "tuned_on_ideal|noise|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9883949602673741,
+    "median_add_s_mm": 0.07379690214293078,
+    "median_centre_mm": 0.14283272967536972,
+    "median_rotation_deg": 0.12470109871658445,
+    "errors": 0
+  },
+  "tuned_on_ideal|aluminium|all": {
+    "n": 420,
+    "success_rate": 0.9857142857142858,
+    "auc": 0.8333011166569149,
+    "median_add_s_mm": 1.123173802625388,
+    "median_centre_mm": 2.1777930901255154,
+    "median_rotation_deg": 1.5423656799438374,
+    "errors": 0
+  },
+  "tuned_on_ideal|aluminium|bracket": {
+    "n": 267,
+    "success_rate": 0.9775280898876404,
+    "auc": 0.7799568138449041,
+    "median_add_s_mm": 1.2176810996606946,
+    "median_centre_mm": 2.342674746560586,
+    "median_rotation_deg": 2.121145531738959,
+    "errors": 0
+  },
+  "tuned_on_ideal|aluminium|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9263921548974827,
+    "median_add_s_mm": 0.9310684399679303,
+    "median_centre_mm": 1.760614370738868,
+    "median_rotation_deg": 0.8756594639858023,
+    "errors": 0
+  },
+  "tuned_on_ideal|shadows|all": {
+    "n": 420,
+    "success_rate": 0.9904761904761905,
+    "auc": 0.9613878884272347,
+    "median_add_s_mm": 0.004521441724136821,
+    "median_centre_mm": 0.010303096088130246,
+    "median_rotation_deg": 0.014350940142672897,
+    "errors": 0
+  },
+  "tuned_on_ideal|shadows|bracket": {
+    "n": 267,
+    "success_rate": 0.9850187265917603,
+    "auc": 0.9462774486353115,
+    "median_add_s_mm": 0.004095009899174329,
+    "median_centre_mm": 0.008993864482074817,
+    "median_rotation_deg": 0.018675823265759717,
+    "errors": 0
+  },
+  "tuned_on_ideal|shadows|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9877570872798068,
+    "median_add_s_mm": 0.005189626790524926,
+    "median_centre_mm": 0.012587471075191021,
+    "median_rotation_deg": 0.008843348119125946,
+    "errors": 0
+  },
+  "tuned_on_ideal|edges|all": {
+    "n": 420,
+    "success_rate": 0.9904761904761905,
+    "auc": 0.9477084656615987,
+    "median_add_s_mm": 0.20131703786319122,
+    "median_centre_mm": 0.5577379338192208,
+    "median_rotation_deg": 0.8172782256884827,
+    "errors": 0
+  },
+  "tuned_on_ideal|edges|bracket": {
+    "n": 267,
+    "success_rate": 0.9850187265917603,
+    "auc": 0.9211103113139676,
+    "median_add_s_mm": 0.2982130681630224,
+    "median_centre_mm": 0.7849560111374705,
+    "median_rotation_deg": 1.3795930852178069,
+    "errors": 0
+  },
+  "tuned_on_ideal|edges|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9941248526604058,
+    "median_add_s_mm": 0.008730607078177854,
+    "median_centre_mm": 0.031055024855396,
+    "median_rotation_deg": 0.012577441656016772,
+    "errors": 0
+  },
+  "tuned_on_ideal|realistic|all": {
+    "n": 420,
+    "success_rate": 0.9904761904761905,
+    "auc": 0.8481806055506628,
+    "median_add_s_mm": 1.035215798765421,
+    "median_centre_mm": 1.8976531439373931,
+    "median_rotation_deg": 1.8882333438742815,
+    "errors": 0
+  },
+  "tuned_on_ideal|realistic|bracket": {
+    "n": 267,
+    "success_rate": 0.9850187265917603,
+    "auc": 0.8002058866006627,
+    "median_add_s_mm": 1.0850192047655582,
+    "median_centre_mm": 1.9794571861883126,
+    "median_rotation_deg": 2.643336490306413,
+    "errors": 0
+  },
+  "tuned_on_ideal|realistic|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9319011935222309,
+    "median_add_s_mm": 0.9576930897310376,
+    "median_centre_mm": 1.839030666129723,
+    "median_rotation_deg": 0.9099356874226404,
+    "errors": 0
+  },
+  "tuned_on_realistic|ideal|all": {
+    "n": 420,
+    "success_rate": 0.9857142857142858,
+    "auc": 0.9567195861349047,
+    "median_add_s_mm": 0.00455938970844727,
+    "median_centre_mm": 0.01121039102519054,
+    "median_rotation_deg": 0.013596949618142888,
+    "errors": 0
+  },
+  "tuned_on_realistic|ideal|bracket": {
+    "n": 267,
+    "success_rate": 0.9775280898876404,
+    "auc": 0.9353830296572998,
+    "median_add_s_mm": 0.003919328264601063,
+    "median_centre_mm": 0.0090740627377428,
+    "median_rotation_deg": 0.019460243901020254,
+    "errors": 0
+  },
+  "tuned_on_realistic|ideal|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.993953969007588,
+    "median_add_s_mm": 0.0054379106586566195,
+    "median_centre_mm": 0.014309049856568558,
+    "median_rotation_deg": 0.009120540634802372,
+    "errors": 0
+  },
+  "tuned_on_realistic|noise|all": {
+    "n": 420,
+    "success_rate": 0.9857142857142858,
+    "auc": 0.9445576517691431,
+    "median_add_s_mm": 0.16254186630249023,
+    "median_centre_mm": 0.4394383347916283,
+    "median_rotation_deg": 0.38612035702003106,
+    "errors": 0
+  },
+  "tuned_on_realistic|noise|bracket": {
+    "n": 267,
+    "success_rate": 0.9775280898876404,
+    "auc": 0.9187905478505327,
+    "median_add_s_mm": 0.2501395938452333,
+    "median_centre_mm": 0.5942698566981042,
+    "median_rotation_deg": 0.6002750365831118,
+    "errors": 0
+  },
+  "tuned_on_realistic|noise|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9895237742937769,
+    "median_add_s_mm": 0.09092386608244851,
+    "median_centre_mm": 0.16353509111737674,
+    "median_rotation_deg": 0.10261776117253396,
+    "errors": 0
+  },
+  "tuned_on_realistic|aluminium|all": {
+    "n": 420,
+    "success_rate": 0.9880952380952381,
+    "auc": 0.8436945966057132,
+    "median_add_s_mm": 1.0752847883850336,
+    "median_centre_mm": 2.100251291512505,
+    "median_rotation_deg": 1.4532318937022226,
+    "errors": 0
+  },
+  "tuned_on_realistic|aluminium|bracket": {
+    "n": 267,
+    "success_rate": 0.9812734082397003,
+    "auc": 0.7840328062434676,
+    "median_add_s_mm": 1.228655455633998,
+    "median_centre_mm": 2.3247918269319188,
+    "median_rotation_deg": 2.235355150609243,
+    "errors": 0
+  },
+  "tuned_on_realistic|aluminium|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9478102699829651,
+    "median_add_s_mm": 0.7806678186170757,
+    "median_centre_mm": 1.3828955637722624,
+    "median_rotation_deg": 0.7408837326668292,
+    "errors": 0
+  },
+  "tuned_on_realistic|shadows|all": {
+    "n": 420,
+    "success_rate": 0.9738095238095238,
+    "auc": 0.9433925065821218,
+    "median_add_s_mm": 0.004596107601173571,
+    "median_centre_mm": 0.011189647585146099,
+    "median_rotation_deg": 0.013955450254792686,
+    "errors": 0
+  },
+  "tuned_on_realistic|shadows|bracket": {
+    "n": 267,
+    "success_rate": 0.9588014981273408,
+    "auc": 0.9132294934879658,
+    "median_add_s_mm": 0.003943537649320206,
+    "median_centre_mm": 0.009435591911353229,
+    "median_rotation_deg": 0.019090879010279917,
+    "errors": 0
+  },
+  "tuned_on_realistic|shadows|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9960299215895708,
+    "median_add_s_mm": 0.005416386557044461,
+    "median_centre_mm": 0.014264351382370258,
+    "median_rotation_deg": 0.008794407089057522,
+    "errors": 0
+  },
+  "tuned_on_realistic|edges|all": {
+    "n": 420,
+    "success_rate": 0.9928571428571429,
+    "auc": 0.964279429631606,
+    "median_add_s_mm": 0.1334090338787064,
+    "median_centre_mm": 0.4327270454520995,
+    "median_rotation_deg": 0.5340911582787577,
+    "errors": 0
+  },
+  "tuned_on_realistic|edges|bracket": {
+    "n": 267,
+    "success_rate": 0.9887640449438202,
+    "auc": 0.9446258875120895,
+    "median_add_s_mm": 0.20242453319951892,
+    "median_centre_mm": 0.5780815043770036,
+    "median_rotation_deg": 0.9051767430579806,
+    "errors": 0
+  },
+  "tuned_on_realistic|edges|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.998576787448017,
+    "median_add_s_mm": 0.010282019502483308,
+    "median_centre_mm": 0.03711806285445722,
+    "median_rotation_deg": 0.014949584877333987,
+    "errors": 0
+  },
+  "tuned_on_realistic|realistic|all": {
+    "n": 420,
+    "success_rate": 0.9809523809523809,
+    "auc": 0.8448748808551021,
+    "median_add_s_mm": 0.9976676083169878,
+    "median_centre_mm": 1.8298648001915665,
+    "median_rotation_deg": 1.6395810884062578,
+    "errors": 0
+  },
+  "tuned_on_realistic|realistic|bracket": {
+    "n": 267,
+    "success_rate": 0.9700374531835206,
+    "auc": 0.784795108230935,
+    "median_add_s_mm": 1.1157735716551542,
+    "median_centre_mm": 1.9752776168266406,
+    "median_rotation_deg": 2.302304803313023,
+    "errors": 0
+  },
+  "tuned_on_realistic|realistic|profile": {
+    "n": 153,
+    "success_rate": 1.0,
+    "auc": 0.9497199742580603,
+    "median_add_s_mm": 0.7415291620418429,
+    "median_centre_mm": 1.4468998031171072,
+    "median_rotation_deg": 0.7882495054100088,
+    "errors": 0
+  }
+}

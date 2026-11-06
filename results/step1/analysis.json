@@ -872,7 +872,7 @@
         ]
       }
     },
-    "full|all": {
+    "realistic|all": {
       "n": 420,
       "adds_below_1mm": 0.4738095238095238,
       "adds_below_2mm": 0.9380952380952381,
@@ -1244,7 +1244,7 @@
         ]
       }
     },
-    "full|bracket": {
+    "realistic|bracket": {
       "n": 267,
       "adds_below_1mm": 0.42696629213483145,
       "adds_below_2mm": 0.9400749063670412,
@@ -1616,7 +1616,7 @@
         ]
       }
     },
-    "full|profile": {
+    "realistic|profile": {
       "n": 153,
       "adds_below_1mm": 0.5555555555555556,
       "adds_below_2mm": 0.934640522875817,

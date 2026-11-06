@@ -10,7 +10,8 @@ Usage (after generating both datasets and their camera variants, see M5):
 Phases:
 1. Tuning, on the tuning scenes only (--tune). For each part class, every combination of voxel
    size v and tolerance d in the grids below is run on every part, twice:
-       "tuned_on_ideal" on the ideal depth, "tuned_on_full" on the full camera model.
+       "tuned_on_ideal" on the ideal depth, "tuned_on_realistic" on the realistic depth
+       (all effects of the camera model).
    Kept: the combination with the highest ADD-S AUC (ties: lower median centre error).
    AUC = area under the curve "share of parts with ADD-S < t" for t from 0 to 10 % of the
    diameter, divided by that range = mean over parts of max(0, 1 - ADD-S / (0.1 diameter)).
@@ -18,8 +19,8 @@ Phases:
    rate alone saturated on the tuning scenes (>= 0.93 for every combination).
 2. Evaluation, on the evaluation scenes only (--eval): every part, every camera variant, with
    both chosen parameter sets. The conditions of the report are rows of this table:
-       A = tuned_on_ideal on ideal      B = tuned_on_ideal on full (and on each single effect)
-       C = tuned_on_full on full
+       A = tuned_on_ideal on ideal      B = tuned_on_ideal on realistic (and on each single effect)
+       C = tuned_on_realistic on realistic
 3. Summary per parameter set, variant and class.
 Writes in --out: tuning.csv, chosen.json, evaluation.csv, summary.json.
 Runs --workers processes in parallel, each with ONE thread (Open3D's RANSAC is only repeatable
@@ -45,10 +46,10 @@ from rgbd_sim.scene import MAKE_PART, load_depth, load_scene
 
 # Search grids (mm). Ranges chosen from pilot runs on tuning scenes 0-9 (see the report).
 VOXEL_GRID_MM = {"bracket": [2, 3, 4, 5, 6], "profile": [6, 8, 10, 12]}
-# d for brackets extended to 12, 16 mm: with [1, 2, 4, 8] the choice on the full camera model fell
+# d for brackets extended to 12, 16 mm: with [1, 2, 4, 8] the choice on the realistic depth fell
 # on d = 8 with the AUC still rising (0.797, 0.806, 0.814, 0.822 at v = 4 mm).
 TOLERANCE_GRID_MM = {"bracket": [1, 2, 4, 8, 12, 16], "profile": [1, 2, 4, 8]}
-TUNED_ON = {"tuned_on_ideal": "ideal", "tuned_on_full": "full"}
+TUNED_ON = {"tuned_on_ideal": "ideal", "tuned_on_realistic": "realistic"}
 MIN_POINTS = 10          # fewer measured points than this: no estimate (counted as failure)
 
 FIELDS = ["phase", "params", "variant", "scene", "instance_id", "cls", "visible_pixels",
@@ -239,11 +240,11 @@ def evaluate(args, chosen):
                       f"{s['median_add_s_mm']:6.2f} {s['median_centre_mm']:7.2f} {s['median_rotation_deg']:6.1f}")
     with open(os.path.join(args.out, "summary.json"), "w") as f:
         json.dump(summary, f, indent=2)
-    a, b, c = (summary["tuned_on_ideal|ideal|all"], summary["tuned_on_ideal|full|all"],
-               summary["tuned_on_full|full|all"])
+    a, b, c = (summary["tuned_on_ideal|ideal|all"], summary["tuned_on_ideal|realistic|all"],
+               summary["tuned_on_realistic|realistic|all"])
     for name in ("auc", "success_rate"):
-        print(f"{name:12s}  A (ideal -> ideal): {a[name]:.3f}   B (ideal -> full): {b[name]:.3f}   "
-              f"C (full -> full): {c[name]:.3f}")
+        print(f"{name:12s}  A (ideal -> ideal): {a[name]:.3f}   B (ideal -> realistic): {b[name]:.3f}   "
+              f"C (realistic -> realistic): {c[name]:.3f}")
 
 
 if __name__ == "__main__":

@@ -131,7 +131,7 @@ VARIANTS = {
     "aluminium": dict(edges=False, shadows=False, noise=True,  aluminium=True),   # noise x2.9 on parts
     "shadows":   dict(edges=False, shadows=True,  noise=False, aluminium=False),
     "edges":     dict(edges=True,  shadows=False, noise=False, aluminium=False),
-    "full":      dict(edges=True,  shadows=True,  noise=True,  aluminium=True),   # the D435i model
+    "realistic": dict(edges=True,  shadows=True,  noise=True,  aluminium=True),   # all effects: the D435i model
 }
 
 
