@@ -1,0 +1,28 @@
+{
+  "tuned_on_ideal": {
+    "t_mm": 2,
+    "ties_mm": [
+      1,
+      2,
+      3
+    ],
+    "n_parts": 93,
+    "found50": 1.0,
+    "found75": 1.0,
+    "mean_recall": 0.9787070557242203,
+    "precision": 1.0,
+    "f1": 1.0
+  },
+  "tuned_on_realistic": {
+    "t_mm": 4,
+    "ties_mm": [
+      4
+    ],
+    "n_parts": 93,
+    "found50": 1.0,
+    "found75": 0.6344086021505376,
+    "mean_recall": 0.8044412168469587,
+    "precision": 0.9106696014828545,
+    "f1": 0.9532465485148154
+  }
+}

@@ -1,0 +1,155 @@
+Step 2: 6 variants; 420 parts in 100 scenes. Step 1 references read from results/step1.
+95 % CI by bootstrap over scenes.
+
+0. Parameters (v = voxel, d = tolerance, mm) and their AUC on the tuning scenes
+  tuned_on_ideal                   bracket: v = 3, d = 16 (AUC 0.979)   profile: v = 6, d = 1 (AUC 0.999)
+  tuned_on_realistic_holes75       bracket: v = 6, d = 32 (AUC 0.804)   profile: v = 10, d = 2 (AUC 0.945)
+  tuned_on_realistic_holes45       bracket: v = 6, d = 16 (AUC 0.582)   profile: v = 8, d = 2 (AUC 0.777)
+  tuned_on_realistic_holes30       bracket: v = 6, d = 24 (AUC 0.158)   profile: v = 6, d = 2 (AUC 0.271)
+  tuned_on_realistic_corr2         bracket: v = 5, d = 24 (AUC 0.818)   profile: v = 8, d = 2 (AUC 0.947)
+  tuned_on_realistic_corr5         bracket: v = 8, d = 12 (AUC 0.808)   profile: v = 8, d = 1 (AUC 0.937)
+  tuned_on_realistic_corr10        bracket: v = 6, d = 16 (AUC 0.780)   profile: v = 6, d = 4 (AUC 0.925)
+
+1. Success, AUC, median centre error
+  all
+    Step 1  A                            n=420  success 0.993 [0.984, 1.000]  AUC 0.969 [0.958, 0.979]  centre 0.01 [0.01, 0.01] mm  no estimate 0
+    Step 1  B realistic                  n=420  success 0.990 [0.981, 0.998]  AUC 0.848 [0.835, 0.860]  centre 1.90 [1.86, 1.98] mm  no estimate 0
+    Step 1  C realistic                  n=420  success 0.981 [0.967, 0.993]  AUC 0.845 [0.831, 0.858]  centre 1.83 [1.78, 1.89] mm  no estimate 0
+    B  + holes (aluminium > 75 deg)      n=420  success 0.945 [0.926, 0.966]  AUC 0.780 [0.761, 0.801]  centre 2.18 [2.12, 2.25] mm  no estimate 0
+    C  + holes (aluminium > 75 deg)      n=420  success 0.988 [0.977, 0.998]  AUC 0.816 [0.801, 0.831]  centre 2.15 [2.05, 2.23] mm  no estimate 0
+    B  + holes (aluminium > 45 deg)      n=420  success 0.769 [0.728, 0.809]  AUC 0.554 [0.523, 0.586]  centre 5.56 [4.35, 7.36] mm  no estimate 18
+    C  + holes (aluminium > 45 deg)      n=420  success 0.821 [0.783, 0.859]  AUC 0.620 [0.588, 0.653]  centre 3.57 [3.32, 4.09] mm  no estimate 18
+    B  + holes (aluminium > 30 deg)      n=420  success 0.245 [0.207, 0.281]  AUC 0.166 [0.140, 0.191]  centre 8.41 [6.14, 10.95] mm  no estimate 258
+    C  + holes (aluminium > 30 deg)      n=420  success 0.283 [0.245, 0.324]  AUC 0.182 [0.154, 0.212]  centre 8.57 [6.27, 9.81] mm  no estimate 258
+    B  + correlated noise (2 px)         n=420  success 0.981 [0.967, 0.993]  AUC 0.840 [0.826, 0.854]  centre 2.11 [1.98, 2.18] mm  no estimate 0
+    C  + correlated noise (2 px)         n=420  success 0.979 [0.965, 0.991]  AUC 0.842 [0.828, 0.856]  centre 1.91 [1.82, 2.03] mm  no estimate 0
+    B  + correlated noise (5 px)         n=420  success 0.976 [0.961, 0.989]  AUC 0.813 [0.798, 0.828]  centre 2.34 [2.25, 2.51] mm  no estimate 0
+    C  + correlated noise (5 px)         n=420  success 0.993 [0.984, 1.000]  AUC 0.835 [0.823, 0.845]  centre 2.37 [2.23, 2.51] mm  no estimate 0
+    B  + correlated noise (10 px)        n=420  success 0.986 [0.974, 0.995]  AUC 0.817 [0.803, 0.829]  centre 2.49 [2.33, 2.73] mm  no estimate 0
+    C  + correlated noise (10 px)        n=420  success 0.988 [0.977, 0.998]  AUC 0.820 [0.807, 0.832]  centre 2.35 [2.19, 2.60] mm  no estimate 0
+  bracket
+    Step 1  A                            n=267  success 0.989 [0.975, 1.000]  AUC 0.954 [0.938, 0.969]  centre 0.01 [0.01, 0.01] mm  no estimate 0
+    Step 1  B realistic                  n=267  success 0.985 [0.970, 0.996]  AUC 0.800 [0.780, 0.818]  centre 1.98 [1.88, 2.04] mm  no estimate 0
+    Step 1  C realistic                  n=267  success 0.970 [0.948, 0.989]  AUC 0.785 [0.763, 0.804]  centre 1.98 [1.91, 2.07] mm  no estimate 0
+    B  + holes (aluminium > 75 deg)      n=267  success 0.914 [0.883, 0.946]  AUC 0.712 [0.681, 0.743]  centre 2.19 [2.12, 2.32] mm  no estimate 0
+    C  + holes (aluminium > 75 deg)      n=267  success 0.981 [0.964, 0.996]  AUC 0.752 [0.729, 0.775]  centre 2.36 [2.25, 2.47] mm  no estimate 0
+    B  + holes (aluminium > 45 deg)      n=267  success 0.667 [0.606, 0.722]  AUC 0.439 [0.394, 0.487]  centre 3.67 [3.39, 4.02] mm  no estimate 16
+    C  + holes (aluminium > 45 deg)      n=267  success 0.753 [0.696, 0.806]  AUC 0.515 [0.467, 0.561]  centre 3.51 [3.16, 3.83] mm  no estimate 16
+    B  + holes (aluminium > 30 deg)      n=267  success 0.217 [0.170, 0.266]  AUC 0.141 [0.108, 0.174]  centre 4.39 [3.81, 6.28] mm  no estimate 170
+    C  + holes (aluminium > 30 deg)      n=267  success 0.277 [0.228, 0.333]  AUC 0.164 [0.128, 0.204]  centre 4.21 [3.87, 6.36] mm  no estimate 170
+    B  + correlated noise (2 px)         n=267  success 0.970 [0.949, 0.989]  AUC 0.789 [0.767, 0.809]  centre 2.22 [2.13, 2.31] mm  no estimate 0
+    C  + correlated noise (2 px)         n=267  success 0.966 [0.945, 0.985]  AUC 0.781 [0.760, 0.802]  centre 2.20 [2.08, 2.28] mm  no estimate 0
+    B  + correlated noise (5 px)         n=267  success 0.963 [0.939, 0.982]  AUC 0.750 [0.726, 0.772]  centre 2.54 [2.33, 2.74] mm  no estimate 0
+    C  + correlated noise (5 px)         n=267  success 0.989 [0.975, 1.000]  AUC 0.781 [0.765, 0.797]  centre 2.50 [2.35, 2.70] mm  no estimate 0
+    B  + correlated noise (10 px)        n=267  success 0.978 [0.959, 0.993]  AUC 0.757 [0.737, 0.777]  centre 2.79 [2.54, 3.00] mm  no estimate 0
+    C  + correlated noise (10 px)        n=267  success 0.981 [0.964, 0.996]  AUC 0.761 [0.742, 0.780]  centre 2.81 [2.44, 3.01] mm  no estimate 0
+  profile
+    Step 1  A                            n=153  success 1.000 [1.000, 1.000]  AUC 0.995 [0.988, 1.000]  centre 0.01 [0.01, 0.02] mm  no estimate 0
+    Step 1  B realistic                  n=153  success 1.000 [1.000, 1.000]  AUC 0.932 [0.925, 0.939]  centre 1.84 [1.70, 1.89] mm  no estimate 0
+    Step 1  C realistic                  n=153  success 1.000 [1.000, 1.000]  AUC 0.950 [0.946, 0.953]  centre 1.45 [1.27, 1.53] mm  no estimate 0
+    B  + holes (aluminium > 75 deg)      n=153  success 1.000 [1.000, 1.000]  AUC 0.899 [0.888, 0.909]  centre 2.15 [1.94, 2.31] mm  no estimate 0
+    C  + holes (aluminium > 75 deg)      n=153  success 1.000 [1.000, 1.000]  AUC 0.927 [0.918, 0.934]  centre 1.74 [1.63, 1.89] mm  no estimate 0
+    B  + holes (aluminium > 45 deg)      n=153  success 0.948 [0.911, 0.980]  AUC 0.755 [0.723, 0.783]  centre 10.48 [10.16, 10.79] mm  no estimate 2
+    C  + holes (aluminium > 45 deg)      n=153  success 0.941 [0.902, 0.974]  AUC 0.804 [0.770, 0.836]  centre 5.11 [3.35, 7.70] mm  no estimate 2
+    B  + holes (aluminium > 30 deg)      n=153  success 0.294 [0.224, 0.362]  AUC 0.211 [0.158, 0.262]  centre 17.12 [11.80, 30.41] mm  no estimate 88
+    C  + holes (aluminium > 30 deg)      n=153  success 0.294 [0.225, 0.362]  AUC 0.214 [0.160, 0.266]  centre 16.17 [11.51, 31.34] mm  no estimate 88
+    B  + correlated noise (2 px)         n=153  success 1.000 [1.000, 1.000]  AUC 0.930 [0.922, 0.937]  centre 1.70 [1.60, 1.92] mm  no estimate 0
+    C  + correlated noise (2 px)         n=153  success 1.000 [1.000, 1.000]  AUC 0.948 [0.944, 0.951]  centre 1.46 [1.34, 1.67] mm  no estimate 0
+    B  + correlated noise (5 px)         n=153  success 1.000 [1.000, 1.000]  AUC 0.924 [0.916, 0.931]  centre 2.07 [1.84, 2.29] mm  no estimate 0
+    C  + correlated noise (5 px)         n=153  success 1.000 [1.000, 1.000]  AUC 0.927 [0.921, 0.933]  centre 2.08 [1.87, 2.33] mm  no estimate 0
+    B  + correlated noise (10 px)        n=153  success 1.000 [1.000, 1.000]  AUC 0.920 [0.912, 0.927]  centre 2.02 [1.85, 2.29] mm  no estimate 0
+    C  + correlated noise (10 px)        n=153  success 1.000 [1.000, 1.000]  AUC 0.922 [0.914, 0.928]  centre 1.93 [1.70, 2.07] mm  no estimate 0
+
+2. Stricter thresholds: share of parts below an absolute error
+  all
+    Step 1  A                            adds < 1mm 0.91 [0.88, 0.93]  adds < 2mm 0.98 [0.97, 1.00]  centre < 1mm 0.87 [0.84, 0.90]  centre < 2mm 0.90 [0.88, 0.93]  centre < 5mm 0.99 [0.98, 1.00]
+    Step 1  B realistic                  adds < 1mm 0.47 [0.43, 0.52]  adds < 2mm 0.94 [0.91, 0.96]  centre < 1mm 0.05 [0.03, 0.07]  centre < 2mm 0.56 [0.52, 0.60]  centre < 5mm 0.96 [0.94, 0.98]
+    Step 1  C realistic                  adds < 1mm 0.51 [0.46, 0.56]  adds < 2mm 0.95 [0.94, 0.97]  centre < 1mm 0.09 [0.06, 0.11]  centre < 2mm 0.63 [0.59, 0.67]  centre < 5mm 0.99 [0.98, 1.00]
+    B  + holes (aluminium > 75 deg)      adds < 1mm 0.28 [0.25, 0.32]  adds < 2mm 0.81 [0.78, 0.85]  centre < 1mm 0.02 [0.01, 0.04]  centre < 2mm 0.40 [0.36, 0.44]  centre < 5mm 0.88 [0.85, 0.91]
+    C  + holes (aluminium > 75 deg)      adds < 1mm 0.37 [0.32, 0.41]  adds < 2mm 0.88 [0.85, 0.91]  centre < 1mm 0.05 [0.03, 0.07]  centre < 2mm 0.44 [0.40, 0.47]  centre < 5mm 0.93 [0.90, 0.95]
+    B  + holes (aluminium > 45 deg)      adds < 1mm 0.02 [0.01, 0.03]  adds < 2mm 0.37 [0.32, 0.42]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.01 [0.00, 0.02]  centre < 5mm 0.46 [0.41, 0.51]
+    C  + holes (aluminium > 45 deg)      adds < 1mm 0.06 [0.04, 0.08]  adds < 2mm 0.52 [0.47, 0.58]  centre < 1mm 0.00 [0.00, 0.01]  centre < 2mm 0.06 [0.04, 0.09]  centre < 5mm 0.56 [0.51, 0.61]
+    B  + holes (aluminium > 30 deg)      adds < 1mm 0.01 [0.00, 0.02]  adds < 2mm 0.11 [0.09, 0.14]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.01 [0.00, 0.02]  centre < 5mm 0.15 [0.12, 0.19]
+    C  + holes (aluminium > 30 deg)      adds < 1mm 0.01 [0.00, 0.02]  adds < 2mm 0.12 [0.09, 0.15]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.02 [0.01, 0.03]  centre < 5mm 0.16 [0.12, 0.19]
+    B  + correlated noise (2 px)         adds < 1mm 0.40 [0.35, 0.44]  adds < 2mm 0.92 [0.90, 0.95]  centre < 1mm 0.08 [0.06, 0.11]  centre < 2mm 0.46 [0.41, 0.50]  centre < 5mm 0.94 [0.91, 0.96]
+    C  + correlated noise (2 px)         adds < 1mm 0.46 [0.41, 0.50]  adds < 2mm 0.95 [0.93, 0.97]  centre < 1mm 0.11 [0.09, 0.14]  centre < 2mm 0.54 [0.49, 0.58]  centre < 5mm 0.97 [0.95, 0.98]
+    B  + correlated noise (5 px)         adds < 1mm 0.32 [0.28, 0.37]  adds < 2mm 0.87 [0.84, 0.90]  centre < 1mm 0.10 [0.08, 0.13]  centre < 2mm 0.38 [0.33, 0.43]  centre < 5mm 0.91 [0.89, 0.93]
+    C  + correlated noise (5 px)         adds < 1mm 0.30 [0.26, 0.34]  adds < 2mm 0.91 [0.89, 0.94]  centre < 1mm 0.10 [0.08, 0.13]  centre < 2mm 0.38 [0.33, 0.43]  centre < 5mm 0.95 [0.93, 0.97]
+    B  + correlated noise (10 px)        adds < 1mm 0.29 [0.24, 0.34]  adds < 2mm 0.84 [0.81, 0.87]  centre < 1mm 0.10 [0.07, 0.13]  centre < 2mm 0.37 [0.33, 0.41]  centre < 5mm 0.87 [0.83, 0.90]
+    C  + correlated noise (10 px)        adds < 1mm 0.32 [0.27, 0.36]  adds < 2mm 0.85 [0.82, 0.88]  centre < 1mm 0.09 [0.06, 0.11]  centre < 2mm 0.39 [0.35, 0.43]  centre < 5mm 0.88 [0.85, 0.91]
+  bracket
+    Step 1  A                            adds < 1mm 0.87 [0.83, 0.90]  adds < 2mm 0.98 [0.97, 1.00]  centre < 1mm 0.81 [0.76, 0.86]  centre < 2mm 0.86 [0.82, 0.90]  centre < 5mm 1.00 [0.99, 1.00]
+    Step 1  B realistic                  adds < 1mm 0.43 [0.37, 0.49]  adds < 2mm 0.94 [0.91, 0.97]  centre < 1mm 0.03 [0.01, 0.05]  centre < 2mm 0.52 [0.46, 0.58]  centre < 5mm 0.98 [0.96, 1.00]
+    Step 1  C realistic                  adds < 1mm 0.36 [0.30, 0.42]  adds < 2mm 0.93 [0.90, 0.96]  centre < 1mm 0.01 [0.00, 0.03]  centre < 2mm 0.52 [0.47, 0.58]  centre < 5mm 0.99 [0.97, 1.00]
+    B  + holes (aluminium > 75 deg)      adds < 1mm 0.22 [0.18, 0.27]  adds < 2mm 0.85 [0.81, 0.89]  centre < 1mm 0.01 [0.00, 0.03]  centre < 2mm 0.37 [0.32, 0.42]  centre < 5mm 0.96 [0.93, 0.98]
+    C  + holes (aluminium > 75 deg)      adds < 1mm 0.25 [0.20, 0.30]  adds < 2mm 0.88 [0.84, 0.92]  centre < 1mm 0.03 [0.01, 0.05]  centre < 2mm 0.33 [0.28, 0.38]  centre < 5mm 0.95 [0.92, 0.97]
+    B  + holes (aluminium > 45 deg)      adds < 1mm 0.01 [0.00, 0.02]  adds < 2mm 0.46 [0.39, 0.52]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.00 [0.00, 0.01]  centre < 5mm 0.60 [0.54, 0.66]
+    C  + holes (aluminium > 45 deg)      adds < 1mm 0.02 [0.00, 0.04]  adds < 2mm 0.54 [0.47, 0.61]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.02 [0.01, 0.04]  centre < 5mm 0.60 [0.53, 0.66]
+    B  + holes (aluminium > 30 deg)      adds < 1mm 0.00 [0.00, 0.00]  adds < 2mm 0.13 [0.09, 0.17]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.00 [0.00, 0.00]  centre < 5mm 0.20 [0.15, 0.25]
+    C  + holes (aluminium > 30 deg)      adds < 1mm 0.00 [0.00, 0.00]  adds < 2mm 0.15 [0.10, 0.19]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.01 [0.00, 0.02]  centre < 5mm 0.21 [0.15, 0.26]
+    B  + correlated noise (2 px)         adds < 1mm 0.30 [0.24, 0.36]  adds < 2mm 0.94 [0.91, 0.97]  centre < 1mm 0.07 [0.04, 0.11]  centre < 2mm 0.37 [0.32, 0.43]  centre < 5mm 0.97 [0.94, 0.99]
+    C  + correlated noise (2 px)         adds < 1mm 0.31 [0.25, 0.36]  adds < 2mm 0.93 [0.90, 0.95]  centre < 1mm 0.06 [0.04, 0.10]  centre < 2mm 0.41 [0.36, 0.47]  centre < 5mm 0.96 [0.94, 0.98]
+    B  + correlated noise (5 px)         adds < 1mm 0.25 [0.20, 0.30]  adds < 2mm 0.84 [0.80, 0.88]  centre < 1mm 0.07 [0.04, 0.10]  centre < 2mm 0.32 [0.27, 0.38]  centre < 5mm 0.91 [0.87, 0.94]
+    C  + correlated noise (5 px)         adds < 1mm 0.23 [0.18, 0.28]  adds < 2mm 0.89 [0.86, 0.92]  centre < 1mm 0.07 [0.04, 0.11]  centre < 2mm 0.33 [0.26, 0.39]  centre < 5mm 0.94 [0.91, 0.97]
+    B  + correlated noise (10 px)        adds < 1mm 0.25 [0.19, 0.31]  adds < 2mm 0.82 [0.78, 0.86]  centre < 1mm 0.06 [0.03, 0.09]  centre < 2mm 0.30 [0.25, 0.36]  centre < 5mm 0.84 [0.80, 0.88]
+    C  + correlated noise (10 px)        adds < 1mm 0.25 [0.19, 0.30]  adds < 2mm 0.84 [0.80, 0.88]  centre < 1mm 0.06 [0.03, 0.08]  centre < 2mm 0.31 [0.25, 0.36]  centre < 5mm 0.86 [0.82, 0.90]
+  profile
+    Step 1  A                            adds < 1mm 0.98 [0.95, 1.00]  adds < 2mm 0.98 [0.95, 1.00]  centre < 1mm 0.98 [0.95, 1.00]  centre < 2mm 0.98 [0.95, 1.00]  centre < 5mm 0.98 [0.95, 1.00]
+    Step 1  B realistic                  adds < 1mm 0.56 [0.48, 0.62]  adds < 2mm 0.93 [0.89, 0.97]  centre < 1mm 0.08 [0.04, 0.13]  centre < 2mm 0.64 [0.56, 0.71]  centre < 5mm 0.93 [0.89, 0.97]
+    Step 1  C realistic                  adds < 1mm 0.76 [0.70, 0.83]  adds < 2mm 0.99 [0.98, 1.00]  centre < 1mm 0.21 [0.15, 0.27]  centre < 2mm 0.81 [0.75, 0.87]  centre < 5mm 0.99 [0.98, 1.00]
+    B  + holes (aluminium > 75 deg)      adds < 1mm 0.38 [0.31, 0.45]  adds < 2mm 0.75 [0.68, 0.81]  centre < 1mm 0.04 [0.01, 0.07]  centre < 2mm 0.45 [0.38, 0.52]  centre < 5mm 0.75 [0.68, 0.81]
+    C  + holes (aluminium > 75 deg)      adds < 1mm 0.57 [0.49, 0.64]  adds < 2mm 0.88 [0.83, 0.93]  centre < 1mm 0.08 [0.04, 0.12]  centre < 2mm 0.63 [0.55, 0.71]  centre < 5mm 0.88 [0.83, 0.93]
+    B  + holes (aluminium > 45 deg)      adds < 1mm 0.03 [0.01, 0.06]  adds < 2mm 0.22 [0.15, 0.29]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.01 [0.00, 0.03]  centre < 5mm 0.23 [0.16, 0.30]
+    C  + holes (aluminium > 45 deg)      adds < 1mm 0.12 [0.08, 0.18]  adds < 2mm 0.49 [0.41, 0.57]  centre < 1mm 0.01 [0.00, 0.02]  centre < 2mm 0.14 [0.08, 0.20]  centre < 5mm 0.49 [0.41, 0.57]
+    B  + holes (aluminium > 30 deg)      adds < 1mm 0.02 [0.00, 0.04]  adds < 2mm 0.08 [0.04, 0.12]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.03 [0.01, 0.05]  centre < 5mm 0.07 [0.03, 0.11]
+    C  + holes (aluminium > 30 deg)      adds < 1mm 0.03 [0.01, 0.06]  adds < 2mm 0.08 [0.04, 0.12]  centre < 1mm 0.00 [0.00, 0.00]  centre < 2mm 0.04 [0.01, 0.07]  centre < 5mm 0.07 [0.03, 0.11]
+    B  + correlated noise (2 px)         adds < 1mm 0.57 [0.49, 0.64]  adds < 2mm 0.90 [0.84, 0.94]  centre < 1mm 0.09 [0.05, 0.14]  centre < 2mm 0.60 [0.53, 0.67]  centre < 5mm 0.89 [0.83, 0.94]
+    C  + correlated noise (2 px)         adds < 1mm 0.72 [0.65, 0.79]  adds < 2mm 0.99 [0.97, 1.00]  centre < 1mm 0.20 [0.14, 0.27]  centre < 2mm 0.75 [0.68, 0.81]  centre < 5mm 0.99 [0.97, 1.00]
+    B  + correlated noise (5 px)         adds < 1mm 0.44 [0.36, 0.52]  adds < 2mm 0.93 [0.88, 0.96]  centre < 1mm 0.16 [0.11, 0.23]  centre < 2mm 0.48 [0.40, 0.55]  centre < 5mm 0.92 [0.87, 0.96]
+    C  + correlated noise (5 px)         adds < 1mm 0.42 [0.35, 0.50]  adds < 2mm 0.95 [0.92, 0.98]  centre < 1mm 0.16 [0.10, 0.22]  centre < 2mm 0.47 [0.39, 0.55]  centre < 5mm 0.97 [0.95, 0.99]
+    B  + correlated noise (10 px)        adds < 1mm 0.37 [0.29, 0.45]  adds < 2mm 0.88 [0.82, 0.92]  centre < 1mm 0.18 [0.12, 0.23]  centre < 2mm 0.49 [0.42, 0.57]  centre < 5mm 0.92 [0.87, 0.96]
+    C  + correlated noise (10 px)        adds < 1mm 0.44 [0.36, 0.53]  adds < 2mm 0.87 [0.81, 0.92]  centre < 1mm 0.14 [0.09, 0.19]  centre < 2mm 0.54 [0.46, 0.61]  centre < 5mm 0.92 [0.87, 0.96]
+
+3. Paired comparisons (same parts)
+  + holes (aluminium > 75 deg)
+    B realistic (Step 1) -> B variant all     : success->failure  20, failure->success   1 (McNemar p = 2.1e-05); AUC change -0.068 [-0.088, -0.047]; median centre change +0.01 mm [+0.00, +0.08]
+    B realistic (Step 1) -> B variant bracket : success->failure  20, failure->success   1 (McNemar p = 2.1e-05); AUC change -0.088 [-0.120, -0.056]; median centre change +0.00 mm [+0.00, +0.08]
+    B realistic (Step 1) -> B variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change -0.033 [-0.045, -0.021]; median centre change +0.05 mm [+0.00, +0.25]
+    B variant -> C variant all     : success->failure   4, failure->success  22 (McNemar p = 0.00053); AUC change +0.036 [+0.012, +0.058]; median centre change -0.08 mm [-0.13, -0.01]
+    B variant -> C variant bracket : success->failure   4, failure->success  22 (McNemar p = 0.00053); AUC change +0.041 [+0.004, +0.074]; median centre change +0.03 mm [-0.00, +0.09]
+    B variant -> C variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change +0.028 [+0.018, +0.038]; median centre change -0.42 mm [-0.53, -0.29]
+  + holes (aluminium > 45 deg)
+    B realistic (Step 1) -> B variant all     : success->failure  93, failure->success   0 (McNemar p = 2e-28); AUC change -0.294 [-0.327, -0.262]; median centre change +3.04 mm [+1.93, +5.00]
+    B realistic (Step 1) -> B variant bracket : success->failure  85, failure->success   0 (McNemar p = 5.2e-26); AUC change -0.361 [-0.409, -0.313]; median centre change +1.40 mm [+1.18, +1.62]
+    B realistic (Step 1) -> B variant profile : success->failure   8, failure->success   0 (McNemar p = 0.0078); AUC change -0.177 [-0.209, -0.148]; median centre change +8.64 mm [+8.08, +8.92]
+    B variant -> C variant all     : success->failure  28, failure->success  50 (McNemar p = 0.017); AUC change +0.066 [+0.029, +0.104]; median centre change -0.12 mm [-0.22, -0.05]
+    B variant -> C variant bracket : success->failure  27, failure->success  50 (McNemar p = 0.012); AUC change +0.076 [+0.017, +0.136]; median centre change -0.00 mm [-0.07, +0.04]
+    B variant -> C variant profile : success->failure   1, failure->success   0 (McNemar p = 1); AUC change +0.049 [+0.028, +0.070]; median centre change -1.73 mm [-3.64, -0.76]
+  + holes (aluminium > 30 deg)
+    B realistic (Step 1) -> B variant all     : success->failure 313, failure->success   0 (McNemar p = 1.2e-94); AUC change -0.682 [-0.711, -0.655]; median centre change +6.04 mm [+3.85, +9.26]
+    B realistic (Step 1) -> B variant bracket : success->failure 205, failure->success   0 (McNemar p = 3.9e-62); AUC change -0.659 [-0.697, -0.622]; median centre change +1.93 mm [+1.48, +4.46]
+    B realistic (Step 1) -> B variant profile : success->failure 108, failure->success   0 (McNemar p = 6.2e-33); AUC change -0.721 [-0.773, -0.669]; median centre change +15.88 mm [+10.17, +28.81]
+    B variant -> C variant all     : success->failure  11, failure->success  27 (McNemar p = 0.014); AUC change +0.016 [-0.001, +0.033]; median centre change -0.03 mm [-0.18, +0.10]
+    B variant -> C variant bracket : success->failure   9, failure->success  25 (McNemar p = 0.009); AUC change +0.023 [-0.000, +0.048]; median centre change +0.10 mm [-0.15, +0.32]
+    B variant -> C variant profile : success->failure   2, failure->success   2 (McNemar p = 1); AUC change +0.003 [-0.016, +0.020]; median centre change -0.11 mm [-0.26, -0.01]
+  + correlated noise (2 px)
+    B realistic (Step 1) -> B variant all     : success->failure   7, failure->success   3 (McNemar p = 0.34); AUC change -0.008 [-0.024, +0.007]; median centre change +0.13 mm [+0.05, +0.19]
+    B realistic (Step 1) -> B variant bracket : success->failure   7, failure->success   3 (McNemar p = 0.34); AUC change -0.011 [-0.036, +0.013]; median centre change +0.16 mm [+0.08, +0.25]
+    B realistic (Step 1) -> B variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change -0.002 [-0.010, +0.006]; median centre change +0.04 mm [-0.09, +0.17]
+    B variant -> C variant all     : success->failure   6, failure->success   5 (McNemar p = 1); AUC change +0.002 [-0.011, +0.016]; median centre change -0.08 mm [-0.11, -0.06]
+    B variant -> C variant bracket : success->failure   6, failure->success   5 (McNemar p = 1); AUC change -0.008 [-0.027, +0.014]; median centre change -0.01 mm [-0.05, +0.04]
+    B variant -> C variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change +0.018 [+0.012, +0.024]; median centre change -0.28 mm [-0.44, -0.19]
+  + correlated noise (5 px)
+    B realistic (Step 1) -> B variant all     : success->failure   9, failure->success   3 (McNemar p = 0.15); AUC change -0.035 [-0.049, -0.021]; median centre change +0.40 mm [+0.27, +0.63]
+    B realistic (Step 1) -> B variant bracket : success->failure   9, failure->success   3 (McNemar p = 0.15); AUC change -0.050 [-0.073, -0.028]; median centre change +0.61 mm [+0.32, +0.75]
+    B realistic (Step 1) -> B variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change -0.008 [-0.015, -0.001]; median centre change +0.20 mm [+0.01, +0.39]
+    B variant -> C variant all     : success->failure   1, failure->success   8 (McNemar p = 0.039); AUC change +0.021 [+0.008, +0.034]; median centre change +0.00 mm [-0.01, +0.03]
+    B variant -> C variant bracket : success->failure   1, failure->success   8 (McNemar p = 0.039); AUC change +0.031 [+0.011, +0.052]; median centre change -0.00 mm [-0.02, +0.04]
+    B variant -> C variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change +0.003 [-0.004, +0.011]; median centre change +0.00 mm [-0.03, +0.05]
+  + correlated noise (10 px)
+    B realistic (Step 1) -> B variant all     : success->failure   6, failure->success   4 (McNemar p = 0.75); AUC change -0.032 [-0.044, -0.019]; median centre change +0.52 mm [+0.39, +0.70]
+    B realistic (Step 1) -> B variant bracket : success->failure   6, failure->success   4 (McNemar p = 0.75); AUC change -0.043 [-0.063, -0.023]; median centre change +0.70 mm [+0.49, +0.97]
+    B realistic (Step 1) -> B variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change -0.012 [-0.019, -0.005]; median centre change +0.26 mm [+0.01, +0.45]
+    B variant -> C variant all     : success->failure   4, failure->success   5 (McNemar p = 1); AUC change +0.003 [-0.007, +0.014]; median centre change -0.01 mm [-0.03, +0.00]
+    B variant -> C variant bracket : success->failure   4, failure->success   5 (McNemar p = 1); AUC change +0.004 [-0.013, +0.021]; median centre change +0.00 mm [-0.02, +0.01]
+    B variant -> C variant profile : success->failure   0, failure->success   0 (McNemar p = 1); AUC change +0.002 [-0.001, +0.005]; median centre change -0.06 mm [-0.14, -0.01]

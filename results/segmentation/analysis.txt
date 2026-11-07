@@ -1,0 +1,65 @@
+Evaluation: 420 parts in 100 scenes. t: tuned on ideal 2 mm (tied: [1, 3] mm), tuned on realistic 4 mm. 95 % CI over scenes.
+
+1. Conditions (B also with the tied values of t)
+  all
+    A         (t =  2 mm)  n=420  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.979 [0.978, 0.981]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]
+    B         (t =  2 mm)  n=420  found50 0.998 [0.993, 1.000]  found75 0.898 [0.866, 0.927]  recall 0.875 [0.868, 0.882]  precision 0.282 [0.268, 0.297]  F1 0.439 [0.422, 0.457]
+    B (t=1)   (t =  1 mm)  n=420  found50 0.998 [0.993, 1.000]  found75 0.983 [0.971, 0.993]  recall 0.901 [0.895, 0.907]  precision 0.101 [0.096, 0.107]  F1 0.184 [0.175, 0.193]
+    B (t=3)   (t =  3 mm)  n=420  found50 0.998 [0.993, 1.000]  found75 0.731 [0.691, 0.773]  recall 0.846 [0.837, 0.855]  precision 0.651 [0.636, 0.666]  F1 0.788 [0.777, 0.799]
+    C         (t =  4 mm)  n=420  found50 0.986 [0.974, 0.995]  found75 0.698 [0.655, 0.740]  recall 0.816 [0.805, 0.828]  precision 0.904 [0.898, 0.909]  F1 0.943 [0.937, 0.948]
+  bracket
+    A         (t =  2 mm)  n=267  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.976 [0.974, 0.978]
+    B         (t =  2 mm)  n=267  found50 0.996 [0.988, 1.000]  found75 0.839 [0.789, 0.885]  recall 0.836 [0.825, 0.846]
+    B (t=1)   (t =  1 mm)  n=267  found50 0.996 [0.988, 1.000]  found75 0.974 [0.954, 0.989]  recall 0.873 [0.865, 0.881]
+    B (t=3)   (t =  3 mm)  n=267  found50 0.996 [0.988, 1.000]  found75 0.577 [0.515, 0.642]  recall 0.794 [0.781, 0.808]
+    C         (t =  4 mm)  n=267  found50 0.978 [0.958, 0.993]  found75 0.524 [0.459, 0.588]  recall 0.751 [0.735, 0.768]
+  profile
+    A         (t =  2 mm)  n=153  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.986 [0.986, 0.987]
+    B         (t =  2 mm)  n=153  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.943 [0.942, 0.945]
+    B (t=1)   (t =  1 mm)  n=153  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.950 [0.948, 0.952]
+    B (t=3)   (t =  3 mm)  n=153  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.937 [0.935, 0.938]
+    C         (t =  4 mm)  n=153  found50 1.000 [1.000, 1.000]  found75 1.000 [1.000, 1.000]  recall 0.930 [0.928, 0.931]
+
+2. Paired comparisons (same parts): found (50 %) -> missed and back, mean recall change
+  A -> B all     : found->missed   1, missed->found   0 (McNemar p = 1); mean recall change -0.105
+  A -> B bracket : found->missed   1, missed->found   0 (McNemar p = 1); mean recall change -0.140
+  A -> B profile : found->missed   0, missed->found   0 (McNemar p = 1); mean recall change -0.043
+  B -> C all     : found->missed   5, missed->found   0 (McNemar p = 0.062); mean recall change -0.058
+  B -> C bracket : found->missed   5, missed->found   0 (McNemar p = 0.062); mean recall change -0.084
+  B -> C profile : found->missed   0, missed->found   0 (McNemar p = 1); mean recall change -0.013
+  A -> C all     : found->missed   6, missed->found   0 (McNemar p = 0.031); mean recall change -0.163
+  A -> C bracket : found->missed   6, missed->found   0 (McNemar p = 0.031); mean recall change -0.224
+  A -> C profile : found->missed   0, missed->found   0 (McNemar p = 1); mean recall change -0.056
+
+3. Ablation: t tuned on ideal, one camera effect at a time
+  tuned_on_ideal (t = 2 mm)
+    ideal      found50 1.000 [1.000, 1.000]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]  recall 0.979 [0.978, 0.981]
+    noise      found50 1.000 [1.000, 1.000]  precision 0.294 [0.278, 0.311]  F1 0.455 [0.435, 0.475]  recall 0.967 [0.965, 0.969]
+    aluminium  found50 1.000 [1.000, 1.000]  precision 0.283 [0.268, 0.299]  F1 0.441 [0.423, 0.461]  recall 0.916 [0.909, 0.923]
+    shadows    found50 1.000 [1.000, 1.000]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]  recall 0.965 [0.962, 0.968]
+    edges      found50 1.000 [1.000, 1.000]  precision 0.965 [0.964, 0.966]  F1 0.982 [0.982, 0.983]  recall 0.930 [0.928, 0.932]
+    realistic  found50 0.998 [0.993, 1.000]  precision 0.282 [0.268, 0.297]  F1 0.439 [0.422, 0.457]  recall 0.875 [0.868, 0.882]
+  tuned_on_ideal_tie_t1 (t = 1 mm)
+    ideal      found50 1.000 [1.000, 1.000]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]  recall 0.990 [0.989, 0.991]
+    noise      found50 1.000 [1.000, 1.000]  precision 0.108 [0.102, 0.114]  F1 0.194 [0.184, 0.205]  recall 0.986 [0.985, 0.987]
+    aluminium  found50 1.000 [1.000, 1.000]  precision 0.104 [0.098, 0.110]  F1 0.189 [0.179, 0.199]  recall 0.939 [0.934, 0.944]
+    shadows    found50 1.000 [1.000, 1.000]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]  recall 0.976 [0.972, 0.978]
+    edges      found50 1.000 [1.000, 1.000]  precision 0.962 [0.961, 0.964]  F1 0.981 [0.980, 0.981]  recall 0.935 [0.934, 0.937]
+    realistic  found50 0.998 [0.993, 1.000]  precision 0.101 [0.096, 0.107]  F1 0.184 [0.175, 0.193]  recall 0.901 [0.895, 0.907]
+  tuned_on_ideal_tie_t3 (t = 3 mm)
+    ideal      found50 1.000 [1.000, 1.000]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]  recall 0.968 [0.966, 0.969]
+    noise      found50 1.000 [1.000, 1.000]  precision 0.677 [0.661, 0.693]  F1 0.807 [0.796, 0.818]  recall 0.927 [0.922, 0.933]
+    aluminium  found50 1.000 [1.000, 1.000]  precision 0.658 [0.642, 0.674]  F1 0.794 [0.782, 0.805]  recall 0.889 [0.880, 0.899]
+    shadows    found50 1.000 [1.000, 1.000]  precision 1.000 [1.000, 1.000]  F1 1.000 [1.000, 1.000]  recall 0.954 [0.951, 0.956]
+    edges      found50 1.000 [1.000, 1.000]  precision 0.967 [0.966, 0.968]  F1 0.983 [0.983, 0.984]  recall 0.923 [0.921, 0.925]
+    realistic  found50 0.998 [0.993, 1.000]  precision 0.651 [0.636, 0.666]  F1 0.788 [0.777, 0.799]  recall 0.846 [0.837, 0.855]
+
+4. Fitted table plane vs true plane (median over scenes)
+  tuned_on_ideal               ideal      angle 0.000 deg, offset +0.00 mm
+  tuned_on_ideal               realistic  angle 0.042 deg, offset -0.02 mm
+  tuned_on_ideal_tie_t1        ideal      angle 0.000 deg, offset +0.00 mm
+  tuned_on_ideal_tie_t1        realistic  angle 0.042 deg, offset -0.03 mm
+  tuned_on_ideal_tie_t3        ideal      angle 0.000 deg, offset +0.00 mm
+  tuned_on_ideal_tie_t3        realistic  angle 0.024 deg, offset +0.01 mm
+  tuned_on_realistic           ideal      angle 0.001 deg, offset -0.00 mm
+  tuned_on_realistic           realistic  angle 0.009 deg, offset +0.00 mm

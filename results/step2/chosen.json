@@ -1,0 +1,170 @@
+{
+  "tuned_on_realistic_holes75": {
+    "bracket": {
+      "voxel_mm": 6,
+      "tolerance_mm": 32,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.8036784478827979,
+      "median_add_s_mm": 1.1587615008465946,
+      "median_centre_mm": 2.1506798849580573,
+      "median_rotation_deg": 3.9421249411972443,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 10,
+      "tolerance_mm": 2,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.9447174356063058,
+      "median_add_s_mm": 0.8511506603099406,
+      "median_centre_mm": 1.5392076587034824,
+      "median_rotation_deg": 0.9063722305784769,
+      "errors": 0
+    }
+  },
+  "tuned_on_realistic_holes45": {
+    "bracket": {
+      "voxel_mm": 6,
+      "tolerance_mm": 16,
+      "n": 58,
+      "success_rate": 0.7931034482758621,
+      "auc": 0.5822019857457129,
+      "median_add_s_mm": 1.5213537262752652,
+      "median_centre_mm": 3.1129505633941483,
+      "median_rotation_deg": 7.005830265661115,
+      "errors": 1
+    },
+    "profile": {
+      "voxel_mm": 8,
+      "tolerance_mm": 2,
+      "n": 35,
+      "success_rate": 0.8857142857142857,
+      "auc": 0.777364801609054,
+      "median_add_s_mm": 2.0557607640512288,
+      "median_centre_mm": 4.11742690288628,
+      "median_rotation_deg": 2.8121179918055046,
+      "errors": 1
+    }
+  },
+  "tuned_on_realistic_holes30": {
+    "bracket": {
+      "voxel_mm": 6,
+      "tolerance_mm": 24,
+      "n": 58,
+      "success_rate": 0.22413793103448276,
+      "auc": 0.1582576608945523,
+      "median_add_s_mm": 2.036278136074543,
+      "median_centre_mm": 3.8989890876195665,
+      "median_rotation_deg": 12.149364389531828,
+      "errors": 37
+    },
+    "profile": {
+      "voxel_mm": 6,
+      "tolerance_mm": 2,
+      "n": 35,
+      "success_rate": 0.37142857142857144,
+      "auc": 0.2711781093496699,
+      "median_add_s_mm": 5.648356396704912,
+      "median_centre_mm": 15.48833363023463,
+      "median_rotation_deg": 15.839573733075131,
+      "errors": 17
+    }
+  },
+  "tuned_on_realistic_corr2": {
+    "bracket": {
+      "voxel_mm": 5,
+      "tolerance_mm": 24,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.817676060722215,
+      "median_add_s_mm": 1.181397179607302,
+      "median_centre_mm": 2.3574514249645677,
+      "median_rotation_deg": 4.543190283350027,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 8,
+      "tolerance_mm": 2,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.947497940977849,
+      "median_add_s_mm": 0.8088072063401341,
+      "median_centre_mm": 1.6133327382200737,
+      "median_rotation_deg": 1.1246259524675493,
+      "errors": 0
+    }
+  },
+  "tuned_on_realistic_corr5": {
+    "bracket": {
+      "voxel_mm": 8,
+      "tolerance_mm": 12,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.8079883635963605,
+      "median_add_s_mm": 1.205605047289282,
+      "median_centre_mm": 2.429920968452176,
+      "median_rotation_deg": 5.69226695868754,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 8,
+      "tolerance_mm": 1,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.9368794829336144,
+      "median_add_s_mm": 0.9893343085423112,
+      "median_centre_mm": 1.8174687016096651,
+      "median_rotation_deg": 2.191464876437542,
+      "errors": 0
+    }
+  },
+  "tuned_on_realistic_corr10": {
+    "bracket": {
+      "voxel_mm": 6,
+      "tolerance_mm": 16,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.7800228893115146,
+      "median_add_s_mm": 1.4000970404595137,
+      "median_centre_mm": 2.882939643987327,
+      "median_rotation_deg": 6.636610888266967,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 6,
+      "tolerance_mm": 4,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.9251027232127559,
+      "median_add_s_mm": 1.1199685977771878,
+      "median_centre_mm": 2.0509634088724717,
+      "median_rotation_deg": 2.301308206497202,
+      "errors": 0
+    }
+  },
+  "tuned_on_ideal": {
+    "bracket": {
+      "voxel_mm": 3,
+      "tolerance_mm": 16,
+      "n": 58,
+      "success_rate": 1.0,
+      "auc": 0.9785972111496605,
+      "median_add_s_mm": 0.003879704991049948,
+      "median_centre_mm": 0.008295282344315749,
+      "median_rotation_deg": 0.020808425884631186,
+      "errors": 0
+    },
+    "profile": {
+      "voxel_mm": 6,
+      "tolerance_mm": 1,
+      "n": 35,
+      "success_rate": 1.0,
+      "auc": 0.999395844329895,
+      "median_add_s_mm": 0.0052055379455850925,
+      "median_centre_mm": 0.015439790194787443,
+      "median_rotation_deg": 0.008257577602646485,
+      "errors": 0
+    }
+  }
+}
