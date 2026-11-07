@@ -1,12 +1,15 @@
-"""M3 check: the error measures give the expected answer on poses whose error we know.
+"""
+Check: the error measures give the expected answer on poses whose error we know.
 
 Usage: python checks/check_metrics.py
+
 For each part, starting from an arbitrary "true" pose:
 1. the true pose itself                      -> every error 0
 2. every symmetry: first checks that the rotated model really lies on the original one
    (largest distance ~0), then the errors of the symmetric pose -> ADD-S ~0, centre 0, rotation 0
-   (the plain angle between the two poses is printed too: it is NOT 0)
+   (the plain angle between the two poses is printed too: it is not 0)
 3. poses that are wrong by a known amount    -> centre error = that amount; ADD-S as printed
+
 Also prints the diameters and the success thresholds (10 % of the diameter).
 """
 import numpy as np

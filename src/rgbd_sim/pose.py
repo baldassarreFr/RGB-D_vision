@@ -1,20 +1,20 @@
-"""Pose estimation of one part: register the part's CAD model to the points the camera sees.
+"""
+Pose estimation of one part performed in three steps:
+    - FPFH is used as a feature descriptor to find matching points between the image and the CAD model's
+    - RANSAC is used to find a coarse pose that aligns the part's points with the model's points
+    - ICP is used to refine the pose by minimizing the distance between the part's points and the model's points
 
-Three steps (Open3D):
-  1. coarse:  FPFH features + RANSAC  on voxel-downsampled points  (finds the right region,
-              even if the part is upside down; accurate to about one voxel)
-  2. refine:  point-to-plane ICP      on all the part's points    (small corrections;
-              first a wide pass at 1.5v, then a tight pass at tolerance d)
-  3. verify:  steps 1-2 are repeated with HYPOTHESES different random seeds; each resulting
-              pose is checked by rendering the model in that pose and comparing its depth with
-              the measured depth (tolerance d); the pose that explains it best is kept.
+  These steps are repeated with different random seeds (HYPOTHESES).
+  Each resulting pose is checked by rendering the model in that pose and comparing its depth with the measured depth (tolerance d).
+  The pose that explains it best is kept.
+
 Two scales, tuned in the experiment:
-  v  voxel size = size of shape details. Every other size is v times a fixed factor from the
-     Open3D global-registration tutorial (which takes them from Choi et al., CVPR 2015):
-     normals 2v, FPFH 5v, RANSAC 1.5v (we use 1.0v, see below).
+  v  voxel size = size of shape details.
   d  tolerance = how far a measured point may lie from the true surface: tight ICP pass and
-     depth check. Depends on the camera noise, not on the shape. Default 0.4v (tutorial ICP).
-Poses are 4x4 matrices model -> camera, like pose_camera in meta.json.
+     depth check.
+
+
+Poses are 4x4 matrices model -> camera.
 """
 import time
 
@@ -25,24 +25,19 @@ import trimesh
 from rgbd_sim.camera import backproject
 from rgbd_sim.render import render_ideal
 
-# Factors of the Open3D global-registration tutorial (sizes = factor x voxel size)
-NORMAL_RADIUS_FACTOR = 2.0      # neighbourhood for estimating normals      (max 30 neighbours)
-FEATURE_RADIUS_FACTOR = 5.0     # neighbourhood for FPFH                     (max 100 neighbours)
-RANSAC_DISTANCE_FACTOR = 1.0    # a scene point counts as matched if this close to the model.
-                                # Tutorial: 1.5. Ours: 1.0, from a pilot on scene 0 (tuning split):
-                                # 1.5v exceeds the 4 mm bracket wall for v >= 3 mm (faces confused),
-                                # 0.5v loses correct poses to voxel rounding; 1.0v solved 5/5 at v=3.
-ICP_DISTANCE_FACTOR = 0.4       # final ICP pairs only points closer than this
-ICP_WIDE_FACTOR = 1.5           # our addition: a first ICP pass as wide as RANSAC's tolerance
-ICP_MAX_ITERATIONS = 50         # Open3D default is 30
-RANSAC_MAX_ITERATIONS = 100000  # tutorial values
-RANSAC_CONFIDENCE = 0.999      # 1.0 = never stop early (always all iterations)
-EDGE_LENGTH_CHECK = 0.9         # tutorial: reject 3-point samples whose shape differs (>10 %)
-HYPOTHESES = 5                  # our choice: RANSAC+ICP runs per part (different seeds)
 
-# Points sampled on the CAD surface: ~1 mm apart on a profile, ~0.4 mm on a bracket, i.e. finer
-# than the camera (~1.5 mm per pixel at 0.65 m) and than any voxel size we try. Not a tuned
-# parameter: it only has to be "dense enough" (more points would give the same result).
+NORMAL_RADIUS_FACTOR = 2.0      # neighbourhood for estimating normals
+FEATURE_RADIUS_FACTOR = 5.0     # neighbourhood for FPFH
+RANSAC_DISTANCE_FACTOR = 1.0    # a scene point counts as matched if this close to the model
+
+ICP_DISTANCE_FACTOR = 0.4       # final ICP pairs only points closer than this
+ICP_WIDE_FACTOR = 1.5           # a first ICP pass
+ICP_MAX_ITERATIONS = 50         # Open3D default is 30
+RANSAC_MAX_ITERATIONS = 100000  
+RANSAC_CONFIDENCE = 0.999       
+EDGE_LENGTH_CHECK = 0.9         # reject 3-point samples whose shape differs (>10 %)
+HYPOTHESES = 5                  # RANSAC+ICP runs per part (different seeds)
+
 MODEL_POINTS = 50000
 
 
@@ -95,7 +90,7 @@ def estimate_pose(points, model_pcd, voxel, seed=0, tolerance=None,
                  tolerance  = how far a measured point may lie from the true surface (final
                               ICP); default 0.4 * voxel as in the Open3D tutorial
 
-    Every step moves the SCENE points onto the MODEL (scene -> model): every scene point has a
+    Every step moves the scene points onto the model (scene -> model): every scene point has a
     true partner on the model, while most of the model (its back) has none in the scene. The
     result is inverted at the end.
     returns pose, info  (info: time, fitness, coarse pose, number of points)
@@ -105,8 +100,7 @@ def estimate_pose(points, model_pcd, voxel, seed=0, tolerance=None,
     scene_pcd = o3d.geometry.PointCloud(o3d.utility.Vector3dVector(points))
     reg = o3d.pipelines.registration
 
-    # 1. Coarse: pair scene and model points with similar FPFH features; RANSAC keeps the pose
-    #    under which the most scene points land on the model
+    # FPFH + RANSAC
     model_down, model_fpfh = _model_features(model_pcd, voxel)
     scene_down, scene_fpfh = _downsample_with_features(scene_pcd, voxel, estimate_normals=True)
     dist = ransac_factor * voxel
@@ -120,9 +114,7 @@ def estimate_pose(points, model_pcd, voxel, seed=0, tolerance=None,
          reg.CorrespondenceCheckerBasedOnDistance(dist)],
         reg.RANSACConvergenceCriteria(RANSAC_MAX_ITERATIONS, confidence))
 
-    # 2. Refine: point-to-plane ICP on all scene points, against the model's exact normals.
-    #    a) wide: accepts pairs as far apart as RANSAC's own tolerance (1.5v), so it can correct
-    #       what RANSAC left;  b) tight (0.4v, tutorial): final accuracy, ignoring stray points.
+    # ICP refinement
     wide = reg.registration_icp(scene_pcd, model_pcd, ICP_WIDE_FACTOR * voxel, coarse.transformation,
                                 reg.TransformationEstimationPointToPlane(),
                                 reg.ICPConvergenceCriteria(max_iteration=ICP_MAX_ITERATIONS))
@@ -147,7 +139,7 @@ def depth_check_score(pose, mesh, depth, mask, K, tolerance):
 
     Renders the model alone in `pose` (camera frame) and compares, pixel by pixel:
       explained:    pixel of the part where the model is within `tolerance` of the measured depth
-      contradicted: pixel outside the part where the model would be IN FRONT of the measured
+      contradicted: pixel outside the part where the model would be in front of the measured
                     surface (then the camera would have seen the model there, and it did not)
     Pixels where the model would be hidden behind something else are not counted (occlusion).
     score = explained / (pixels of the part + contradicted)

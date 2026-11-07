@@ -1,11 +1,13 @@
 """Check of the part/table segmentation on one scene, ideal and realistic depth.
 
 Usage: python checks/check_segment.py [scene folder]   (default: outputs/dataset/scenes/000000)
+
 For t = 2, 4, 6, 8, 12 mm and both depths:
 1. fitted table plane vs the true one: angle between the normals and difference in height at the
    camera's line of sight (expected ~0 on ideal depth);
 2. per part: share of its pixels marked "part" (found if >= 50 %);
 3. pixel precision: share of the "part" pixels that really are a part (expected 1.00 on ideal).
+
 Figure: outputs/check_segment_<scene>.png (close-up, one panel per depth and t):
   blue = part pixel marked part, orange = part pixel missed, green = table pixel marked part.
 """

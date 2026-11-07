@@ -1,7 +1,5 @@
-"""Ideal depth rendering: one ray per pixel into a scene of meshes (Open3D ray casting).
-
-Same method as depth_first.py, turned into a reusable function that takes any
-list of trimesh meshes already placed in world coordinates.
+"""
+Ideal depth rendering using Open3D ray casting: one ray per pixel into a scene of meshes.
 """
 import numpy as np
 import open3d as o3d
@@ -11,7 +9,8 @@ def render_ideal(meshes, K, extrinsic, width, height, with_normals=False):
     """Ideal depth and label images of a scene.
 
     meshes:    list of trimesh.Trimesh, already placed in world coordinates (metres)
-    K:         3x3 intrinsic matrix;  extrinsic: 4x4 world->camera matrix
+    K:         3x3 intrinsic matrix
+    extrinsic: 4x4 world->camera matrix
     returns:   depth (H, W) float32, z-depth in metres, 0 = no hit
                label (H, W) uint8, 0 = nothing hit, i + 1 = meshes[i]
                normals (H, W, 3), only if with_normals=True: unit vector perpendicular
@@ -48,8 +47,8 @@ def render_ideal(meshes, K, extrinsic, width, height, with_normals=False):
     for i, mesh_id in enumerate(ids):
         label[hit & (geom == mesh_id)] = i + 1
 
-    # 5. Optional: surface normals, used for shading the RGB image (and tomorrow
-    #    for the camera effects that depend on the viewing angle).
+    # 5. Optional: surface normals, used for shading the RGB image and for the effects
+    #    that depend on the viewing angle (Step 2 holes).
     if with_normals:
         normals = hits["primitive_normals"].numpy().astype(np.float64)
         normals[~hit] = 0.0

@@ -1,4 +1,5 @@
-"""One synthetic scene: drop parts, render ideal RGB-D and labels, save to / load from disk.
+"""
+Generates one synthetic scene: drop parts, render ideal RGB-D and labels, save to disk.
 
 Folder of a saved scene:
   rgb.png    8-bit colour image (H, W, 3)
@@ -22,7 +23,7 @@ from rgbd_sim.render import render_ideal
 from rgbd_sim.shading import shade
 
 DEPTH_SCALE = 0.0001                   # metres per depth unit (0.1 mm), stored in meta.json
-CAMERA_EYE = (0.0, -0.35, 0.55)        # same camera pose as all the checks so far
+CAMERA_EYE = (0.0, -0.35, 0.55)        # same camera pose as in the checks
 CAMERA_TARGET = (0.0, 0.0, 0.0)
 MAKE_PART = {"profile": make_profile, "bracket": make_bracket}
 MATERIAL = {"table": "table", "profile": "aluminium", "bracket": "aluminium"}
@@ -44,7 +45,7 @@ def choose_parts(seed):
 
 def generate_scene(seed):
     """Build one scene. The seed decides everything: part count, drop poses, result."""
-    # 1. Which parts, and where they come to rest.
+    # Which parts, and where they come to rest.
     names = choose_parts(seed)
     meshes = [MAKE_PART[n]() for n in names]
     poses, physics_info = drop_parts(names, meshes, seed=seed)
@@ -54,7 +55,7 @@ def generate_scene(seed):
         m.apply_transform(pose)
         placed.append(m)
 
-    # 2. Render: depth, labels (1 = table, 2.. = parts), normals; then the RGB image.
+    # Render: depth, labels (1 = table, 2.. = parts), normals; then the RGB image.
     K = intrinsics()
     extrinsic = look_at(CAMERA_EYE, CAMERA_TARGET)
     depth, label, normals = render_ideal([make_table()] + placed, K, extrinsic, W, H,
@@ -62,7 +63,6 @@ def generate_scene(seed):
     materials = [MATERIAL["table"]] + [MATERIAL[n] for n in names]
     rgb = shade(depth, label, normals, materials, K, extrinsic)
 
-    # 3. Everything needed to use and to check this scene later.
     objects = []
     for i, (name, pose) in enumerate(zip(names, poses)):
         instance = i + 2
@@ -141,7 +141,7 @@ def load_scene(folder):
 
 
 def save_models(folder):
-    """The part models in their own frame (PLY), needed later for pose estimation."""
+    """The part models in their own frame (PLY), as used by pose estimation."""
     os.makedirs(folder, exist_ok=True)
     for name, make in MAKE_PART.items():
         make().export(os.path.join(folder, f"{name}.ply"))

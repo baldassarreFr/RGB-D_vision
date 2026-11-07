@@ -1,9 +1,11 @@
-"""Part/table segmentation: which pixels show a part and which the table?
+"""
+Part/table segmentation: which pixels show a part and which the table?
 
-Method (no training, depth only):
+Method:
   1. fit the table plane with RANSAC (Open3D segment_plane) on the measured points;
   2. every point higher than t above that plane is "part", everything else "table".
 One parameter, t (metres): used both as RANSAC's inlier distance and as the height threshold.
+
 Touching parts are not separated: this is part/table segmentation, not instance segmentation.
 """
 import numpy as np

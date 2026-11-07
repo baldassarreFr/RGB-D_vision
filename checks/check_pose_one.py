@@ -1,17 +1,19 @@
-"""M2 check: pose estimation on the IDEAL depth of one scene, every part.
+"""
+Check the pose estimation of every part on the ideal depth of one scene.
 
 Usage: python checks/check_pose_one.py [scene folder] [voxel mm] [camera variant] [RANSAC factor] [RANSAC confidence]
        (defaults: outputs/dataset/scenes/000000, 3 mm, ideal, and the values in pose.py)
-On ideal depth the method should find the true pose (up to the parts' symmetries).
+
 For every part it prints:
   pts        points of the part seen by the camera (before / after downsampling)
   on model   median and 90th percentile distance of those points to the model placed in the
-             ESTIMATED pose: about 0 if the model lies on the points
+             estimated pose: about 0 if the model lies on the points
   centre     distance between estimated and true centre of the part [mm]: about 0 if right
              (the symmetries of the parts do not move the centre)
   angle      rotation between estimated and true pose [deg]: 0, or a symmetry (90, 180) if right
   time       seconds for this part (all runs)
   score      depth check of the chosen pose and of every run (1 = explains the depth perfectly)
+
 Then runs the first part again with the same seed: same result expected (reproducible).
 """
 import sys

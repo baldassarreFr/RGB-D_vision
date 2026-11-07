@@ -1,16 +1,10 @@
-"""Diagnosis of the coarse step (FPFH + RANSAC) on one scene: why does it pick wrong poses?
+"""
+Diagnosis of the coarse step (FPFH + RANSAC) on one scene.
 
 Usage: python checks/check_ransac.py [scene folder] [voxel mm] [camera variant]
        (defaults: outputs/dataset/scenes/000000, 3 mm, ideal)
-For every part, two questions:
-1. Are the FPFH pairs right?  Each downsampled scene point is paired with the model point whose
-   FPFH histogram is most similar (what RANSAC receives). A pair counts as right if that model
-   point lies within 2v of where the scene point really is on the model (true pose).
-   Pairs with a symmetric copy of the right point count as wrong, so this is a LOWER bound.
-2. Does RANSAC's criterion prefer the true pose?  Inlier share (scene points within RANSAC's
-   distance of the model, as RANSAC counts them) for the TRUE pose and for the pose each of
-   the 5 RANSAC runs returned (with its centre error).
-   If wrong poses get as many inliers as the true pose, the criterion cannot tell them apart.
+
+If wrong poses get as many inliers as the true pose, the criterion cannot tell them apart.
 """
 import sys
 

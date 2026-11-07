@@ -1,13 +1,16 @@
-"""Figures that show the procedure on real examples (for the report and the README).
+"""
+Produce figures that show the procedure on real examples.
 
 Usage (after the experiment):  python scripts/make_figures.py
-Reads outputs/dataset_eval, outputs/experiment/evaluation.csv and chosen.json; writes to docs/figures:
+
+Reads outputs/dataset_eval, outputs/experiment/evaluation.csv and chosen.json;
+writes to docs/figures:
   fig_scene.png        one evaluation scene: colour image, labels, ideal depth, realistic depth
   fig_pose_bracket.png pose estimation of a typical bracket, on ideal depth (A) and on the
   fig_pose_profile.png realistic depth (B): measured depth, pose after RANSAC, final pose;
                        outline of the model in the estimated pose (orange) and in the true pose (blue)
-  fig_error_axes.png   where the error of condition B lies: along the camera's line of sight or
-                       sideways (re-estimates a sample of parts; prints the medians)
+  outputs/fig_error_axes.png  (diagnostic, not in docs/figures or the report) where the error of
+                       condition B lies: along the line of sight or sideways (re-estimates a sample)
 "Typical" = the part whose centre error in B is closest to the median of its class.
 """
 import os
@@ -218,4 +221,5 @@ if __name__ == "__main__":
     ax.set_title("Condition B: direction of the centre error", color=INK)
     ax.legend(frameon=False, fontsize=8, loc="upper left")
     ax.grid(color="#e4e3df", lw=0.8)
-    save(fig, "fig_error_axes.png")
+    fig.savefig("outputs/fig_error_axes.png", dpi=200, bbox_inches="tight")   # diagnostic only
+    print("written outputs/fig_error_axes.png")

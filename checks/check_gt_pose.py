@@ -2,11 +2,14 @@
 The true poses in meta.json put each part model exactly onto its pixels.
 
 Usage: python checks/check_gt_pose.py [dataset folder]   (default: outputs/dataset)
+
 For every part of every scene:
-  1. take the part's 3D points from the IDEAL depth (pixels with its label), camera frame;
+  1. take the part's 3D points from the ideal depth (pixels with its label), camera frame;
   2. put the part model in the camera frame with pose_camera (model -> camera);
   3. distance of every point to the model surface.
+
 Expected: at most ~0.05 mm (the depth is stored in steps of 0.1 mm), for every part.
+
 Control: the same with the model moved by 2 mm; the distances must become clearly larger,
 otherwise the check could not detect a wrong pose.
 """

@@ -1,0 +1,85 @@
+{
+  "realistic": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true
+    },
+    "depth_kept_percent": 98.2254115020551,
+    "mean_abs_error_table_mm": 1.2257674932479858,
+    "mean_abs_error_parts_mm": 4.392651081085205
+  },
+  "realistic_holes75": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true,
+      "holes_deg": 75
+    },
+    "depth_kept_percent": 98.09304043721487,
+    "mean_abs_error_table_mm": 1.2257674932479858,
+    "mean_abs_error_parts_mm": 4.361968994140625
+  },
+  "realistic_holes45": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true,
+      "holes_deg": 45
+    },
+    "depth_kept_percent": 97.17662165039587,
+    "mean_abs_error_table_mm": 1.2257674932479858,
+    "mean_abs_error_parts_mm": 4.462582588195801
+  },
+  "realistic_holes30": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true,
+      "holes_deg": 30
+    },
+    "depth_kept_percent": 95.98645963053536,
+    "mean_abs_error_table_mm": 1.2257674932479858,
+    "mean_abs_error_parts_mm": 3.5147221088409424
+  },
+  "realistic_corr2": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true,
+      "corr_px": 2
+    },
+    "depth_kept_percent": 98.2254115020551,
+    "mean_abs_error_table_mm": 1.2251545190811157,
+    "mean_abs_error_parts_mm": 4.393012046813965
+  },
+  "realistic_corr5": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true,
+      "corr_px": 5
+    },
+    "depth_kept_percent": 98.2254115020551,
+    "mean_abs_error_table_mm": 1.2243742942810059,
+    "mean_abs_error_parts_mm": 4.364459037780762
+  },
+  "realistic_corr10": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true,
+      "corr_px": 10
+    },
+    "depth_kept_percent": 98.2254115020551,
+    "mean_abs_error_table_mm": 1.236674427986145,
+    "mean_abs_error_parts_mm": 4.387030601501465
+  }
+}

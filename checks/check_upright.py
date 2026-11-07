@@ -1,7 +1,8 @@
 """
-How often do profiles land standing on one end? Compare bounce (restitution) values.
+How often do profiles land standing on one end? Compare bounce values.
 
 Usage: python checks/check_upright.py [n_seeds]     (default 100 seeds, physics only)
+
 A profile counts as "upright" when its long axis (model z) is within ~25 deg of vertical.
 """
 import sys
@@ -16,7 +17,7 @@ from rgbd_sim.scene import choose_parts
 n_seeds = int(sys.argv[1]) if len(sys.argv) > 1 else 100
 MAKE = {"profile": make_profile, "bracket": make_bracket}
 
-for restitution in (0.0, 0.2):
+for restitution in (0.0, 0.2, 0.5):
     t0 = time.time()
     profiles = upright = parts = far = not_settled = 0
     seconds = []

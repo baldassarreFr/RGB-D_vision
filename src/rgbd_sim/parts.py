@@ -1,6 +1,6 @@
 """
 3D models of the parts: a 40x40 T-slot profile and an angle bracket.
-The different sizes are not taken from a specific manufacturer, but plausible measures are used
+Sizes are plausible values, not those of a specific manufacturer.
 
 Each part is a 2D cross-section (shapely) extruded into 3D (trimesh).
 """
@@ -12,7 +12,7 @@ from shapely.ops import unary_union
 
 MM = 0.001               # shapes drawn in millimetres
 
-# T-slot profile 40x40 (all values in mm)
+# T-slot profile 40x40 mm. All values are in mm
 PROFILE_SIZE = 40.0      # outer square
 SLOT_OPENING = 8.0       # width of the slot at the surface
 LIP = 3.0                # thickness of the lips on each side of the opening
@@ -21,7 +21,7 @@ SLOT_DEPTH = 11.0        # from the outer face to the bottom of the groove
 BORE_DIAMETER = 6.8      # centre hole
 PROFILE_LENGTH = 150.0   # length of the piece
 
-# Angle bracket (all values in mm)
+# Angle bracket. All values are in mm
 BRACKET_LEG = 40.0       # length of each leg of the L
 BRACKET_THICKNESS = 4.0  # wall thickness
 BRACKET_WIDTH = 36.0     # how wide the L is extruded
@@ -31,7 +31,7 @@ def profile_cross_section():
     """2D shape of the profile seen end-on, in mm, centred at (0, 0)."""
     half = PROFILE_SIZE / 2
     square = box(-half, -half, half, half)
-    # One T-shaped slot on the top side is made by a narrow opening through the lip, and a wider groove underneath it.
+    # One T-shaped slot on the top side: a narrow opening through the lip, a wider groove under it.
     opening = box(-SLOT_OPENING / 2, half - LIP, SLOT_OPENING / 2, half)
     groove = box(-GROOVE_WIDTH / 2, half - SLOT_DEPTH, GROOVE_WIDTH / 2, half - LIP)
     slot = unary_union([opening, groove])

@@ -1,16 +1,21 @@
-"""D435i camera model: turns the ideal depth of a scene into what the camera would measure.
+"""
+Turns the ideal depth of a scene into what a D435i camera would measure.
 
-Each effect is one function. Every number comes from d435.py (see docs/camera_parameters.md);
-nothing numeric is written here.
-Effects so far:
+Each effect is one function. Every camera parameter comes from d435.py.
+
+Step 1 (VARIANTS): the effects that have a published value for this camera, each on or off:
   - noise: per-pixel random error along the viewing axis, whose size depends on distance
-    and on the material (switch `material`).
+    and on the material.
   - stereo shadows: pixels whose 3D point the right imager cannot see get no depth
     (this also produces the invalid band on the left of the image).
   - edges: object outlines move by up to 1 pixel, randomly towards either side.
-(An incidence-angle effect on the noise was tried and left out: see docs/camera_parameters.md.)
-Step 2 (sensitivity, STEP2_VARIANTS): two effects without a published value for this camera,
-each at several strengths: holes on aluminium seen obliquely, and spatially correlated noise.
+
+Step 2 (sensitivity): two effects without a published value for this camera, each tried at several strengths:
+    - holes on aluminium seen obliquely: a shiny surface reflects the projector's dots
+        like a mirror. The angle at which this happens is not published for the D435, so we study this effect with several values.
+    - spatially correlated noise: the random error is not independent per pixel, but neighbouring
+        pixels share their error (correlation 0.5 at corr_px pixels). Its size is not published for this camera, so we study this effect with several values.
+
 """
 import numpy as np
 
@@ -34,10 +39,11 @@ def material_factor_image(label, meta):
 
 
 def noise_sigma(scene, material=True, depth=None):
-    """(H, W) standard deviation of the depth noise of every pixel, in metres (0 = no depth).
+    """
+    (H, W) standard deviation of the depth noise of every pixel, in metres (0 = no depth).
 
     sigma = base(z)               Intel formula, matte surface seen face-on
-            x material factor     if material: 2.9 on aluminium (Halmetschlager-Funek)
+            * material factor     if material: 2.9 on aluminium (Halmetschlager-Funek)
     depth: the depth to compute it for (default: the scene's ideal depth).
     """
     meta = scene["meta"]
@@ -71,12 +77,12 @@ def correlated_field(shape, corr_px, rng):
 
 
 def add_noise(depth, sigma, rng, corr_px=0):
-    """Move every valid pixel along the viewing axis by a random amount of size sigma.
+    """
+    Move every valid pixel along the viewing axis by a random amount of size sigma.
 
     corr_px = 0 (Step 1): independent Gaussian noise per pixel.
     corr_px > 0 (Step 2, sensitivity): the same sigma per pixel, but neighbouring pixels share
-    their error (correlation 0.5 at corr_px pixels). Its size is not published for this camera,
-    so Step 2 tries several values. Pixels without depth stay 0.
+    their error (correlation 0.5 at corr_px pixels). Pixels without depth stay 0.
     """
     if corr_px > 0:
         field = correlated_field(depth.shape, corr_px, rng)
@@ -91,8 +97,8 @@ def stereo_shadow_mask(scene):
 
     The depth image belongs to the left imager; the right imager sits BASELINE_M to its right
     (camera +x). A pixel can only be matched if its 3D point is also visible from the right:
-    1. inside the right imager's field of view (otherwise: invalid band on the left of the image);
-    2. not hidden behind something closer (otherwise: stereo shadow beside an object).
+        1. inside the right imager's field of view (otherwise: invalid band on the left of the image);
+        2. not hidden behind something closer (otherwise: stereo shadow beside an object).
     """
     depth, meta = scene["depth"], scene["meta"]
     K = np.array(meta["camera"]["K"])
@@ -125,15 +131,8 @@ def stereo_shadow_mask(scene):
 
 
 def aluminium_holes_mask(scene, critical_deg):
-    """(H, W) bool, Step 2 (sensitivity): aluminium pixels seen more obliquely than critical_deg.
-
-    A shiny surface reflects the projector's dots like a mirror: seen face-on it sends them back
-    to the camera (Halmetschlager-Funek measured aluminium face-on and got depth), tilted it sends
-    them away, the stereo matcher finds no pattern and the pixel gets no depth. The angle at which
-    this happens is not published for the D435, so Step 2 tries several values.
-    Angle = between the surface normal and the line of sight (the projector sits between the two
-    imagers, within 50 mm of the camera, so its direction differs by a few degrees at most).
-    Computed from the ideal geometry and labels; the matte table is never affected.
+    """
+    (H, W) bool, Step 2 (sensitivity): aluminium pixels seen more obliquely than critical_deg.
     """
     meta = scene["meta"]
     aluminium = np.zeros(scene["label"].shape, dtype=bool)
@@ -148,15 +147,8 @@ def aluminium_holes_mask(scene, critical_deg):
 
 
 def shift_edges(depth, label, rng):
-    """Move the outline of every object by up to EDGE_SHIFT_PX pixel, randomly in or out.
-
-    A pixel is "on an edge" if a neighbour EDGE_SHIFT_PX away (left, right, up or down) belongs
-    to another object (labels: table, or another part). No numerical threshold is needed.
-    With probability EDGE_SHIFT_PROBABILITY the pixel takes that neighbour's depth, so the
-    outline moves by one pixel: outwards or inwards. No new depths are created (no blending),
-    pixels without depth are left alone, labels are not changed.
-    Simplification: edges inside one object (rim of a slot, one leg of a bracket in front of the
-    other) are not moved.
+    """
+    Move the outline of every object by up to EDGE_SHIFT_PX pixel, randomly in or out.
     """
     k = d435.EDGE_SHIFT_PX
     valid = depth > 0
@@ -178,7 +170,7 @@ def shift_edges(depth, label, rng):
 VARIANTS = {
     "ideal":     dict(edges=False, shadows=False, noise=False, aluminium=False),
     "noise":     dict(edges=False, shadows=False, noise=True,  aluminium=False),  # Intel base noise only
-    "aluminium": dict(edges=False, shadows=False, noise=True,  aluminium=True),   # noise x2.9 on parts
+    "aluminium": dict(edges=False, shadows=False, noise=True,  aluminium=True),   # base noise, x2.9 on the parts
     "shadows":   dict(edges=False, shadows=True,  noise=False, aluminium=False),
     "edges":     dict(edges=True,  shadows=False, noise=False, aluminium=False),
     "realistic": dict(edges=True,  shadows=True,  noise=True,  aluminium=True),   # all effects: the D435i model
@@ -193,16 +185,13 @@ STEP2_VARIANTS = {
 
 
 def apply_camera(scene, edges, shadows, noise, aluminium, rng, corr_px=0, holes_deg=None):
-    """Ideal depth -> depth as the D435i would measure it, with the chosen effects.
+    """
+    Ideal depth -> depth as the D435i would measure it, with the chosen effects.
 
     Order: geometry first, then the random error on what is left.
-      1. edges:   object outlines move by up to 1 px          (Halmetschlager-Funek, Table 2)
-      2. shadows: pixels the right imager cannot see -> 0     (geometry, baseline 50 mm)
-         holes (Step 2 only, if holes_deg): aluminium seen more obliquely than holes_deg -> 0
-      3. noise:   random error of size sigma on every pixel   (Intel formula; x2.9 on aluminium)
-                  corr_px > 0 (Step 2 only): the error is correlated over about corr_px pixels
-    The stereo shadows are computed from the ideal scene geometry. The material of a pixel is
-    taken from the ideal labels, also where an edge moved by one pixel.
+      1. edges
+      2. stereo shadows
+      3. noise
     """
     depth = scene["depth"].copy()
     if edges:

@@ -25,7 +25,7 @@ table = pts_world[valid & (label == 1)]         # (N, 3) points on the table
 bar = pts_world[valid & (label == 2)]           # (M, 3) points on the bar
 
 
-#Measurements, in millimetres
+# Measurements, in millimetres
 mm = 1000.0
 print(f"table: {len(table)} points, z = {table[:, 2].mean() * mm:+.3f} mm "
       f"(max |z| {np.abs(table[:, 2]).max() * mm:.3f} mm)            expected 0")

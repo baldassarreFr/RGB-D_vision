@@ -1,14 +1,17 @@
-"""Apply the D435i camera model to every scene of the dataset, in every variant.
+"""
+Apply the D435i camera model to every scene of the dataset, in every variant.
 
 Usage (after scripts/generate_dataset.py):
     python scripts/make_camera_variants.py [--dataset D]                  # Step 1 variants
     python scripts/make_camera_variants.py [--dataset D] --set step2      # Step 2 variants
     python scripts/make_camera_variants.py [--dataset D] --figure-only    # only redraw the figure
+
 For each scene folder writes depth_<variant>.png next to depth.png (the ideal depth).
   step1: the variants in camera_model.VARIANTS; random numbers from (scene seed, variant number).
-  step2: the variants in camera_model.STEP2_VARIANTS, written to NEW files (depth_realistic_*.png);
+  step2: the variants in camera_model.STEP2_VARIANTS, written to new files (depth_realistic_*.png);
          no Step 1 file is touched. They use the same random numbers as "realistic", so each
          differs from "realistic" only by its extra effect.
+
 Also writes, in the dataset folder (step2: names with "_step2"):
   camera_variants_summary.json   per variant: depth kept, typical error on table and parts
   camera_variants.png            one scene in every variant (close-up + 3D points from the front)

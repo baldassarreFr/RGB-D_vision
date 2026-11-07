@@ -1,7 +1,9 @@
-"""Check the saved normals and the incidence angles they give (needed by the noise model).
+"""
+Check the saved normals and the incidence angles they give (used by the Step 2 holes).
 
 Usage: python checks/check_normals.py [scene folder]    (default: outputs/dataset/scenes/000000)
 Run scripts/generate_dataset.py first (the scenes must contain normals.npz).
+
 Checks:
 1. the table's normals point straight up (0, 0, 1);
 2. all normals have length 1;

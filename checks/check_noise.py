@@ -1,10 +1,13 @@
-"""Look at the noise effect on one scene, in its four variants, and check that it is right.
+"""
+Look at the noise effect on one scene, in its two variants, and check that it is right.
 
 Usage: python checks/check_noise.py [scene folder]   (default: outputs/dataset/scenes/000000)
 Variants: base only | base x aluminium.
+
 Checks:
 1. the noise added has exactly the intended size: (noisy - ideal) / sigma must have std ~1;
 2. typical sigma on the table, on the tops of the parts and on their steep faces.
+
 Figure outputs/check_noise.png, one column per variant:
   row 1 depth (close-up), row 2 error added [mm], row 3 the 3D points seen from the front
   (height vs left-right): the "trembling" shows as thickness of the lines.

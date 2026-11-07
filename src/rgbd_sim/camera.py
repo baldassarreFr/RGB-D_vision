@@ -1,7 +1,7 @@
-"""Camera model shared by all scripts: D435-like depth intrinsics, camera pose,
+"""Camera model shared by all scripts: intrinsic parameters, camera pose,
 and conversion between depth pixels and 3D points.
 
-Conventions (same as depth_first.py):
+Conventions:
 - World frame: table top is the plane z = 0, z points up. Units: metres.
 - Camera frame (OpenCV): x right, y down, z forward (out of the lens).
 - Pixel (col, row) has its centre at (col + 0.5, row + 0.5), as in Open3D's ray caster.
@@ -10,9 +10,8 @@ Conventions (same as depth_first.py):
 import numpy as np
 
 W, H = 848, 480          # D435 depth stream resolution used in this project
-# Horizontal depth field of view of the D435i (Intel product page, "H:87 V:58"):
-# https://www.intel.com/content/www/us/en/products/sku/190004/intel-realsense-depth-camera-d435i/specifications.html
-# Other Intel sources give 85.2 deg (D435 page, product brief: +/- 3 deg); real units vary.
+# Horizontal depth field of view of the D435i
+
 HFOV_DEG = 87.0
 
 
@@ -40,7 +39,7 @@ def look_at(eye, target, up=(0, 0, 1)):
 
 
 def backproject(depth, K):
-    """Depth image (H, W) -> 3D points (H, W, 3) in CAMERA coordinates.
+    """Depth image (H, W) -> 3D points (H, W, 3) in camera coordinates.
 
     Inverts the pinhole projection u = fx * X/Z + cx, v = fy * Y/Z + cy.
     Pixels without data (depth 0) become NaN.
@@ -62,14 +61,17 @@ def camera_to_world(points_cam, extrinsic):
     R = extrinsic[:3, :3]
     t = extrinsic[:3, 3]
     p = (points_cam - t).reshape(-1, 3).T        # (3, N): one point per column, like in the formula
-    p_world = R.T @ p                            # the textbook formula
+    p_world = R.T @ p                            # p_world = R^T (p_cam - t)
     return p_world.T.reshape(points_cam.shape)   # back to the input shape, e.g. (H, W, 3)
 
 
 def incidence_angle(depth, normals, K, extrinsic):
     """Angle (radians) between each pixel's surface normal and its line of sight.
 
-    0 = surface seen face-on, pi/2 = seen edge-on. NaN where there is no depth.
+    0 = surface seen face-on
+    pi/2 = seen edge-on
+    NaN where there is no depth
+
     normals: (H, W, 3) unit normals in world coordinates.
     """
     points = camera_to_world(backproject(depth, K), extrinsic)     # (H, W, 3), world frame

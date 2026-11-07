@@ -1,11 +1,14 @@
-"""Check the edge effect on one scene.
+"""
+Check the edge effect on one scene.
 
 Usage: python checks/check_edges.py [scene folder]   (default: outputs/dataset/scenes/000000)
+
 Checks:
 1. about half of the pixels on depth edges change (EDGE_SHIFT_PROBABILITY = 0.5);
 2. every changed pixel takes exactly the depth of a direct neighbour (edge moves by <= 1 px,
    no new depth values are invented);
 3. objects grow and shrink about equally often.
+
 Figure: outputs/check_edges.png (close-up; blue = object grew by a pixel, orange = shrank).
 """
 import os

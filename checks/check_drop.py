@@ -1,7 +1,7 @@
 """
 Drop a few parts on the table with PyBullet, then look at them with the camera.
 
-Usage: python check_drop.py [seed]     (different seed -> different scene)
+Usage: python checks/check_drop.py [seed]     (different seed -> different scene)
 """
 import os
 import sys

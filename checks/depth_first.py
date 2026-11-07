@@ -1,7 +1,8 @@
-"""Step 1: render an IDEAL depth image of a simple scene, seen by a D435-like camera.
+"""
+Render an ideal depth image of a simple scene, seen by a D435-like camera.
 
-Ideal = no noise, no holes, perfect edges. The camera imperfections come later,
-as separate functions applied on top of this image.
+Ideal = no noise, no holes, perfect edges. The camera imperfections are applied on top of
+such images by camera_model.py.
 """
 import numpy as np
 import open3d as o3d

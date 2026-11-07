@@ -1,14 +1,17 @@
-"""The experiment: does the camera model change the outcome of pose estimation?
+"""
+Run the pose estimation experiment, Step 1 or Step 2.
 
-Usage (after generating both datasets and their camera variants, see M5):
+Usage (after generating both datasets and their camera variants, see the README):
     python scripts/run_pose_experiment.py                   # tuning, then evaluation
-    python scripts/run_pose_experiment.py --tune-only       # stop after tuning (look at it first)
+    python scripts/run_pose_experiment.py --tune-only       # stop after tuning
     python scripts/run_pose_experiment.py --skip-tuning     # reuse outputs/experiment/chosen.json
     python scripts/run_pose_experiment.py --rechoose --tune-only   # choose again from tuning.csv
-    python scripts/run_pose_experiment.py --set step2 --grid reduced   # Step 2 (sensitivity), in
+    python scripts/run_pose_experiment.py --set step2   # Step 2 (sensitivity), "extended" grid, in
                                                      # outputs/step2; Step 1 files are not touched
     python scripts/run_pose_experiment.py --extend --tune-only     # run only the grid points
                                                      # missing from tuning.csv, then choose
+
+                                                     
 Phases:
 1. Tuning, on the tuning scenes only (--tune). For each part class, every combination of voxel
    size v and tolerance d in the grids below is run on every part, twice:
@@ -17,16 +20,17 @@ Phases:
    Kept: the combination with the highest ADD-S AUC (ties: lower median centre error).
    AUC = area under the curve "share of parts with ADD-S < t" for t from 0 to 10 % of the
    diameter, divided by that range = mean over parts of max(0, 1 - ADD-S / (0.1 diameter)).
-   It rewards both success and accuracy (PoseCNN reports the same kind of AUC); the success
-   rate alone saturated on the tuning scenes (>= 0.93 for every combination).
+
 2. Evaluation, on the evaluation scenes only (--eval): every part, every camera variant, with
    both chosen parameter sets. The conditions of the report are rows of this table:
-       A = tuned_on_ideal on ideal      B = tuned_on_ideal on realistic (and on each single effect)
+       A = tuned_on_ideal on ideal
+       B = tuned_on_ideal on realistic (and on each single effect)
        C = tuned_on_realistic on realistic
+
 3. Summary per parameter set, variant and class.
+
 Writes in --out: tuning.csv, chosen.json, evaluation.csv, summary.json.
-Runs --workers processes in parallel, each with ONE thread (Open3D's RANSAC is only repeatable
-single-threaded).
+Runs --workers processes in parallel, each with one thread
 """
 import os
 os.environ.setdefault("OMP_NUM_THREADS", "1")   # must be set before Open3D is loaded
@@ -48,15 +52,15 @@ from rgbd_sim.scene import MAKE_PART, load_depth, load_scene
 
 # Search grids (mm). Ranges chosen from pilot runs on tuning scenes 0-9 (see the report).
 VOXEL_GRID_MM = {"bracket": [2, 3, 4, 5, 6], "profile": [6, 8, 10, 12]}
-# d for brackets extended to 12, 16 mm: with [1, 2, 4, 8] the choice on the realistic depth fell
-# on d = 8 with the AUC still rising (0.797, 0.806, 0.814, 0.822 at v = 4 mm).
+# d for brackets extended to 12, 16 mm
+
 TOLERANCE_GRID_MM = {"bracket": [1, 2, 4, 8, 12, 16], "profile": [1, 2, 4, 8]}
 TUNED_ON = {"tuned_on_ideal": "ideal", "tuned_on_realistic": "realistic"}
-# Step 2 (sensitivity): tuning on each Step 2 variant; "reduced" drops the grid points that were
-# clearly worse in Step 1 (brackets v = 2 mm, d = 1 and 12 mm; profiles v = 12 mm)
-# "extended" = reduced + brackets v = 8 mm and d = 12, 24, 32 mm: with the reduced grid, the choice
-# for brackets fell on its upper corner (v = 6, d = 16) with the AUC still rising (same rule as in
-# Step 1, where d was extended to 16 mm). Run with --extend: only the new points are computed.
+# Step 2
+# "reduced" drops grid points to save time
+# "extended" = reduced + brackets v = 8 mm and d = 12, 24, 32 mm
+
+
 STEP2_GRIDS = {"full": (VOXEL_GRID_MM, TOLERANCE_GRID_MM),
                "reduced": ({"bracket": [3, 4, 5, 6], "profile": [6, 8, 10]},
                            {"bracket": [2, 4, 8, 16], "profile": [1, 2, 4, 8]}),
@@ -69,7 +73,7 @@ FIELDS = ["phase", "params", "variant", "scene", "instance_id", "cls", "visible_
           "points", "voxel_mm", "tolerance_mm", "add_s_mm", "success", "centre_mm",
           "rotation_deg", "score", "seconds", "error"]
 
-# ---------- work done inside each process ----------
+
 _parts = {}
 
 
@@ -122,7 +126,6 @@ def run_job(job):
     return row
 
 
-# ---------- helpers for the main process ----------
 def scene_folders(dataset):
     root = os.path.join(dataset, "scenes")
     return sorted(os.path.join(root, d) for d in os.listdir(root))
@@ -269,8 +272,8 @@ if __name__ == "__main__":
     parser.add_argument("--out", default=None, help="output folder (default: outputs/experiment for "
                         "step1, outputs/step2 for step2)")
     parser.add_argument("--set", choices=["step1", "step2"], default="step1")
-    parser.add_argument("--grid", choices=["full", "reduced", "extended"], default="full",
-                        help="step2 tuning grid")
+    parser.add_argument("--grid", choices=["full", "reduced", "extended"], default="extended",
+                        help="step2 tuning grid (extended: the one of the reported results)")
     parser.add_argument("--step1-chosen", default="results/step1/chosen.json",
                         help="step2: Step 1 parameters (tuned_on_ideal is reused for condition B)")
     parser.add_argument("--workers", type=int, default=os.cpu_count(), help="parallel processes")

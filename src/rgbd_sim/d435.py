@@ -1,9 +1,7 @@
-"""Every number of the D435i camera model, in one place.
+"""
+This script contains in one place the values for the D435i camera model.
 
 Each constant has its row number in docs/camera_parameters.md, where its source is given.
-The camera-model code imports from here and never writes a number of its own.
-Intrinsics (resolution 848 x 480, HFOV 87 deg: rows 1-2) live in camera.py.
-Run `python -m rgbd_sim.d435` to print the derived values used in the report.
 """
 
 # Row 3 - stereo geometry
@@ -20,7 +18,7 @@ MATERIAL_NOISE_FACTOR = {
 
 # Rows 8-9 - edge artifacts
 EDGE_SHIFT_PX = 1                  # Halmetschlager-Funek et al. 2019, Table 2 (D435, 0-3 m)
-EDGE_SHIFT_PROBABILITY = 0.5       # OUR CHOICE: the source gives the maximum displacement, not
+EDGE_SHIFT_PROBABILITY = 0.5       # our choice: the source gives the maximum displacement, not
                                    # how often it happens; 1/2 = no preferred side
 
 

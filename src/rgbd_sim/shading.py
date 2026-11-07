@@ -1,14 +1,11 @@
-"""A simple RGB image for each scene: base colours lit by one light (Blinn-Phong model).
-
-Not photorealistic on purpose. The experiment uses depth; the RGB image makes each
-sample a complete RGB-D image. Simplification: RGB is rendered from the depth
-camera's viewpoint (as if already aligned to depth); on the real D435i the colour
-camera sits a few centimetres to the side.
 """
+Produce a simple RGB image for each scene.
+"""
+
 import numpy as np
 from rgbd_sim.camera import backproject, camera_to_world
 
-# Direction from the surface TOWARDS the light (a lamp above, slightly front-left).
+# Direction from the surface towards the light
 LIGHT = np.array([-0.3, -0.4, 1.0]) / np.linalg.norm([-0.3, -0.4, 1.0])
 AMBIENT = 0.25          # light that reaches every surface, even facing away from the lamp
 DIFFUSE = 0.75          # light that depends on how much the surface faces the lamp

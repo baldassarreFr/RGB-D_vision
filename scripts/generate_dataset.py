@@ -60,7 +60,7 @@ n_ok = sum(s["ok"] for s in summary)
 print(f"done: {len(summary)} scenes, {n_ok} ok, in {time.time() - t_start:.0f} s -> {args.out}")
 
 
-# Overview images saving
+# Overview images
 def overview(index, title, path, **imshow_args):
     cols = 5
     rows = int(np.ceil(len(thumbnails) / cols))

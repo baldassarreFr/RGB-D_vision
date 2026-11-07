@@ -1,12 +1,8 @@
-"""Step 2 check: correlated noise keeps the noise size of Step 1 and has the requested patch size.
+"""
+Step 2 check: correlated noise keeps the noise size of Step 1 and has the requested patch size.
 
 Usage: python checks/check_corr_noise.py [scene folder]   (default: outputs/dataset/scenes/000000)
-For corr_px = 0 (Step 1), 2, 5, 10 on one scene's ideal depth:
-1. noise / sigma has standard deviation ~1: the size of the noise per pixel is unchanged
-   (sigma = Intel formula x material factor, as in Step 1);
-2. correlation between the errors of two pixels corr_px apart (left-right and up-down):
-   ~0.5 by construction; for corr_px = 0, neighbours 1 pixel apart: ~0;
-3. corr_px = 0 gives exactly the Step 1 noise (same random numbers).
+
 Figure: outputs/check_corr_noise.png (the same close-up of the error, one panel per corr_px).
 """
 import os
@@ -38,7 +34,7 @@ for corr in (0, 2, 5, 10):
     print(f"corr_px {corr:2d}: std of noise/sigma {np.nanstd(z):.3f} (expected ~1);  correlation at "
           f"{r} px: left-right {c_h:.2f}, up-down {c_v:.2f} (expected {'~0' if corr == 0 else '~0.5'})")
 
-# 3. corr_px = 0 is Step 1's noise: same draws as add_noise without the new argument
+# 3. corr_px = 0 is Step 1's noise: same draws as add_noise without corr_px
 step1 = add_noise(depth, sigma, np.random.default_rng(0))
 again = add_noise(depth, sigma, np.random.default_rng(0), corr_px=0)
 print(f"corr_px 0 identical to Step 1 noise: {np.array_equal(step1, again)}   (expected True)")

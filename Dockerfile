@@ -1,4 +1,4 @@
-# Build:  docker build -t rgbd-vision
+# Build:  docker build -t rgbd-vision .
 FROM python:3.11-slim
 
 # System libraries Open3D needs on Linux
@@ -15,8 +15,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 RUN pip install --no-cache-dir -e .
 
-#No screen inside the container: matplotlib draws to files instead of windows
+# No screen inside the container: matplotlib draws to files instead of windows
 ENV MPLBACKEND=Agg
+ENV OMP_NUM_THREADS=1
 
 
 CMD ["python", "checks/check_sample.py"]

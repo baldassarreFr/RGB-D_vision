@@ -1,22 +1,24 @@
-"""Second downstream task: part/table segmentation, ideal vs realistic depth (Step 1 variants).
+"""
+Step 2 (second downstream task): part/table segmentation, ideal vs realistic depth.
 
 Usage:
     python scripts/run_segment_experiment.py               # tuning, then evaluation
     python scripts/run_segment_experiment.py --tune-only   # stop after tuning
     python scripts/run_segment_experiment.py --skip-tuning # reuse outputs/segmentation/chosen.json
     python scripts/run_segment_experiment.py --rechoose --tune-only  # choose again from the tuning CSVs
+
 Same design as the pose experiment:
 1. Tuning on the tuning scenes (--tune): every threshold t in T_GRID_MM, once on ideal depth
-   ("tuned_on_ideal") and once on realistic depth ("tuned_on_realistic"); kept: the t with the
-   highest F1 = harmonic mean of (share of parts found) and (pixel precision), pooled over scenes.
-   Ties: if several t share the highest F1 (on ideal depth t = 1, 2, 3 mm are all perfect), the
-   middle one is the reference and the others are evaluated too ("<params>_tie_t<t>"), so that
-   condition B is reported as a range over the equally good choices, not as one arbitrary pick.
+   ("tuned_on_ideal") and once on realistic depth ("tuned_on_realistic").
+
 2. Evaluation on the evaluation scenes (--eval): every Step 1 camera variant with both t.
-       A = tuned_on_ideal on ideal   B = tuned_on_ideal on realistic   C = tuned_on_realistic on realistic
+       A = tuned_on_ideal on ideal
+       B = tuned_on_ideal on realistic
+       C = tuned_on_realistic on realistic
+
 A part is "found" if at least 50 % of its pixels are marked "part" (75 % reported as well).
-Writes in --out: tuning_parts.csv, tuning_scenes.csv, chosen.json, evaluation_parts.csv,
-evaluation_scenes.csv.
+
+Writes in --out: tuning_parts.csv, tuning_scenes.csv, chosen.json, evaluation_parts.csv, evaluation_scenes.csv.
 """
 import os
 os.environ.setdefault("OMP_NUM_THREADS", "1")   # before Open3D is loaded (repeatable RANSAC)

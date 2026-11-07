@@ -1,7 +1,8 @@
 """
 Generate one complete scene, save it, load it back, and check it end to end.
 
-Usage: python check_sample.py [seed]
+Usage: python checks/check_sample.py [seed]
+
 Checks:
 1. saving and loading change nothing (depth only by the 0.1 mm rounding);
 2. the saved poses are right: every pixel of a part, taken back into that part's

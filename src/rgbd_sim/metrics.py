@@ -1,16 +1,15 @@
-"""How wrong is an estimated pose? Error measures between an estimated and a true pose.
+"""
+How wrong is an estimated pose?
+Error measures between an estimated and a true pose.
 
-Poses are 4x4 matrices model -> camera (like pose_camera in meta.json); distances in metres.
+Poses are 4x4 matrices model -> camera.
   add_s           decides success: mean distance from the model in the estimated pose to the
                   closest point of the model in the true pose (blind to symmetries).
-                  [Hinterstoisser et al. 2012 (ADD); Xiang et al. 2018, PoseCNN (ADD-S)]
-                  We measure the distance to the model SURFACE (exact), not to a set of model
-                  points, so the result has no floor from the point spacing.
-  success         ADD-S below 10 % of the part's diameter (threshold used by PoseCNN and LINEMOD).
-  centre_error    distance between estimated and true centre (diagnosis: sliding along an axis).
-  rotation_error  rotation angle to the closest symmetric copy of the true pose (diagnosis).
-The symmetries are known exactly because the parts are designed in parts.py (model frame:
-centre of the bounding box; profile axis = z; bracket L in the x-y plane, width along z).
+  success         ADD-S below 10 % of the part's diameter.
+  centre_error    distance between estimated and true centre
+  rotation_error  rotation angle to the closest symmetric copy of the true pose (diagnosis)
+
+The symmetries are known exactly because the parts are designed in parts.py
 """
 import numpy as np
 import open3d as o3d
@@ -39,10 +38,10 @@ SYMMETRIES = {
 
 
 def diameter(mesh):
-    """Largest distance between two points of the part (m): between two of its vertices.
+    """
+    Largest distance between two points of the part (m): between two of its vertices.
 
-    All vertex pairs are compared (a few hundred vertices: cheap; no convex hull, which would
-    need scipy).
+    All vertex pairs are compared.
     """
     v = np.asarray(mesh.vertices)
     return np.max(np.linalg.norm(v[:, None, :] - v[None, :, :], axis=-1))

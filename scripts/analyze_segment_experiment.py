@@ -1,18 +1,20 @@
-"""Analysis of the part/table segmentation experiment (numbers and figures, no interpretation).
+"""
+Analysis of the part/table segmentation experiment (tables and figures).
 
 Usage: python scripts/analyze_segment_experiment.py [--exp outputs/segmentation] [--figdir docs/figures]
+
 Conditions (parameter set, variant):
     A = tuned_on_ideal (t chosen on ideal depth) on ideal depth
     B = tuned_on_ideal on realistic depth; on ideal depth t = 1, 2, 3 mm were equally perfect, so B is
         also given for the other tied values (range), with the middle one as reference
     C = tuned_on_realistic (t chosen on realistic depth) on realistic depth
+
 Measures (pooled over parts or pixels of the selected scenes):
     found50 / found75  share of parts with >= 50 % / >= 75 % of their pixels marked "part"
     recall             mean share of a part's pixels marked "part"
     precision          share of the pixels marked "part" that belong to a part (all classes together)
     F1                 harmonic mean of found50 and precision
-95 % CI: 2000 resamples of the evaluation scenes. Paired comparison on the same parts: how many
-change from found to missed and back (exact McNemar test).
+
 Writes in --exp: analysis.txt, analysis.json, results_table.tex; figures in --exp and --figdir:
     fig_seg_threshold.png   tuning scenes: found50, precision, F1 against t, ideal and realistic
     fig_seg_conditions.png  A, B (with the tied values), C: found50 per class and precision

@@ -1,13 +1,16 @@
-"""Step 2 check: holes on aluminium seen obliquely.
+"""
+Step 2 check: holes on aluminium seen obliquely.
 
 Usage: python checks/check_holes.py [scene folder]   (default: outputs/dataset/scenes/000000)
+
 For the critical angles of STEP2_VARIANTS (75, 45, 30 deg) on one scene:
 1. only aluminium pixels lose depth, never the table;
 2. every removed pixel is seen more obliquely than the critical angle, every kept aluminium
    pixel less (the rule is applied exactly);
 3. share of each part's pixels removed (more for smaller angles).
+
 Figure: outputs/check_holes_<scene>.png (histogram of the viewing angle of the aluminium pixels, with the
-critical angles; close-up of the ideal depth with the removed pixels in red for each angle).
+critical angles; close-up of the ideal depth with the removed pixels in orange for each angle).
 """
 import os
 import sys

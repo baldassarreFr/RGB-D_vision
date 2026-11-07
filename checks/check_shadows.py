@@ -1,12 +1,14 @@
 """Check the stereo-shadow effect on one scene.
 
 Usage: python checks/check_shadows.py [scene folder]   (default: outputs/dataset/scenes/000000)
+
 Checks:
 1. invalid band on the left of the image: its width in each row must equal the disparity
    fx * b / z of the first point the right imager can see (about 24-46 px in our scenes);
-2. every shadow beside an object must have its occluder immediately to its RIGHT (the right
+2. every shadow beside an object must have its occluder immediately to its right (the right
    imager looks "around" the right side of an object, missing the strip just left of it);
 3. how many pixels lose their depth.
+
 Figure: outputs/check_shadows.png (whole image and close-up; red = depth removed).
 """
 import os
@@ -41,15 +43,7 @@ errors = np.array(errors)
 print(f"left band: {len(errors)} rows, width - disparity = {errors.mean():+.2f} px on average, "
       f"max |difference| {np.abs(errors).max():.2f} px   (expected within ~1 px)")
 
-# ---------- 2. Every shadow must have its occluder just to its RIGHT ----------
-# The right imager looks "around" the right side of an object, so the hidden strip is
-# immediately to the LEFT of the occluding edge, on the same image row (rectified stereo).
-# Test: further right on the same row, some pixel with (ideal) depth must be closer to the
-# camera, by more than the model's own visibility tolerance (1 mm): same rule as the model. How far to look comes from geometry, not from a chosen number: an
-# occluder cannot be closer than the nearest point of the scene (z_min), so it is at most
-# fx*b/z_min - fx*b/z pixels to the right of a hidden pixel at depth z.
-# (Not just the first neighbour: inside the slots the hidden strip is thinner than a pixel,
-# so visible and hidden pixels alternate.)
+# ---------- 2. Every shadow must have its occluder just to its right ----------
 band_width = fx * d435.BASELINE_M / np.where(valid, depth, np.inf)      # disparity in px
 max_disparity = fx * d435.BASELINE_M / depth[valid].min()
 cols_idx = np.arange(depth.shape[1])

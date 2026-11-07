@@ -1,0 +1,68 @@
+{
+  "ideal": {
+    "settings": {
+      "edges": false,
+      "shadows": false,
+      "noise": false,
+      "aluminium": false
+    },
+    "depth_kept_percent": 100.0,
+    "mean_abs_error_table_mm": 0.0,
+    "mean_abs_error_parts_mm": 0.0
+  },
+  "noise": {
+    "settings": {
+      "edges": false,
+      "shadows": false,
+      "noise": true,
+      "aluminium": false
+    },
+    "depth_kept_percent": 100.0,
+    "mean_abs_error_table_mm": 1.197782039642334,
+    "mean_abs_error_parts_mm": 1.0996837615966797
+  },
+  "aluminium": {
+    "settings": {
+      "edges": false,
+      "shadows": false,
+      "noise": true,
+      "aluminium": true
+    },
+    "depth_kept_percent": 100.0,
+    "mean_abs_error_table_mm": 1.1980829238891602,
+    "mean_abs_error_parts_mm": 3.1939024925231934
+  },
+  "shadows": {
+    "settings": {
+      "edges": false,
+      "shadows": true,
+      "noise": false,
+      "aluminium": false
+    },
+    "depth_kept_percent": 98.2254115020551,
+    "mean_abs_error_table_mm": 0.0,
+    "mean_abs_error_parts_mm": 0.0
+  },
+  "edges": {
+    "settings": {
+      "edges": true,
+      "shadows": false,
+      "noise": false,
+      "aluminium": false
+    },
+    "depth_kept_percent": 100.0,
+    "mean_abs_error_table_mm": 0.03754056990146637,
+    "mean_abs_error_parts_mm": 1.3472559452056885
+  },
+  "realistic": {
+    "settings": {
+      "edges": true,
+      "shadows": true,
+      "noise": true,
+      "aluminium": true
+    },
+    "depth_kept_percent": 98.2254115020551,
+    "mean_abs_error_table_mm": 1.2257674932479858,
+    "mean_abs_error_parts_mm": 4.392651081085205
+  }
+}

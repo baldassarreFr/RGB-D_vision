@@ -1,13 +1,13 @@
 # D435i camera model: parameter table
 
 **The single reference for the camera model.** Every number in `src/rgbd_sim/d435.py`
-appears here with its source. Discussion of each source: `notes/report_notes.md`
-(not in the repo).
+appears here with its source. Discussion of each source: the report, Section 3.
 
 Reference camera: **Intel RealSense D435i**, depth stream **848 x 480** (depth module D430).
 Rule: official Intel/RealSense documents first; otherwise papers that measured the same
 depth hardware (D435 or D435i: Intel lists D430/D435/D435i with identical depth
-specifications [S4]). Nothing is invented: an effect without a measured value is left out.
+specifications [S4]). Nothing is invented: an effect without a measured value is left out of the camera model
+(two of them are studied as a sensitivity in Step 2, see section 2).
 
 ## 1. Values used
 
@@ -36,12 +36,12 @@ with no threshold.
 | Mixed depths at edges ("flying pixels" between foreground and background) | no measurement for this camera; edges are only displaced, never blended |
 | Edges inside one object (rim of a slot, one bracket leg in front of the other) | simplification: only object outlines move (edges found from labels, no threshold); slots still lose depth through the stereo shadows |
 | Range limits (min ~0.17-0.3 m, max ~3 m) | never reached: scene depth is 0.49 - 0.92 m [S2, S3] |
-| Holes / glare on aluminium at oblique angles | no measurement for this camera: [R2] tested materials face-on only and lists angles as future work |
+| Holes / glare on aluminium at oblique angles | no measurement for this camera: [R2] tested materials face-on only and lists angles as future work. **Step 2** studies holes at critical angles of 75, 45 and 30 deg (`camera_model.aluminium_holes_mask`) |
 | Holes on aluminium in very bright light | seen in [R2] (no value at 535 lux, 1 m) but not explained and not seen at 1.5 m; mentioned, not modelled |
 | Smoothing of thin features | depends on the matching window, which Intel does not publish [R4] |
 | Wrong depth from highlights / inter-reflections | no measurement; needs a reflection-aware renderer |
 | Projector shadows | projector sits between the imagers [S6], so its shadows lie inside the stereo shadows |
-| Spatial correlation of the noise (errors in neighbouring pixels move together) | real: the matcher works on windows and aggregates neighbours [R4]; [R1] reports depth "layers"; but the size of the correlated patches is not published or measured for this camera -> noise is independent per pixel. Consequence: probably **underestimates** the effect of noise on pose estimation (independent errors average out over many points, patches do not) |
+| Spatial correlation of the noise (errors in neighbouring pixels move together) | real: the matcher works on windows and aggregates neighbours [R4]; [R1] reports depth "layers"; but the size of the correlated patches is not published or measured for this camera -> noise is independent per pixel. **Step 2** studies correlation lengths of 2, 5 and 10 px (`camera_model.correlated_field`) |
 | Temporal noise, calibration bias, post-processing filters | single frames from a calibrated camera, no post-processing (as in [R1]) |
 
 ## 3. Sources

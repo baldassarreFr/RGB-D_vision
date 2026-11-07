@@ -1,22 +1,10 @@
-"""Step 2 analysis: the pose experiment with two camera effects that have no published value.
+"""
+Step 2 analysis: the pose experiment with two camera effects that have no published value.
 
 Usage: python scripts/analyze_step2.py [--exp outputs/step2] [--step1 results/step1] [--figdir docs/figures]
-Numbers and figures only, no interpretation.
-Step 1 results are only READ (references, same evaluation scenes and parts):
-    A               tuned on ideal, evaluated on ideal
-    B realistic     tuned on ideal, evaluated on realistic
-    C realistic     tuned on realistic, evaluated on realistic
-Step 2 results, for every variant "realistic + one more effect" (STEP2_VARIANTS):
-    B   parameters tuned on ideal (the Step 1 ones), evaluated on the variant
-    C   parameters tuned on the variant (tuning scenes), evaluated on the variant
-Measures and statistics are the same as in analyze_pose_experiment.py (functions copied here,
-so the Step 1 code is not touched): success (ADD-S < 10 % of the diameter), ADD-S AUC, median
-centre error, stricter thresholds; 95 % CI by bootstrap over scenes (2000 resamples); paired
-comparisons on the same parts with the exact McNemar test.
-Paired comparisons per variant:
-    B realistic -> B variant   same parameters, the extra effect switched on
-    B variant   -> C variant   same depth, parameters tuned on it
+
 Writes in --exp: analysis.txt, analysis.json, results_table.tex
+
 Figures (in --exp and --figdir):
     fig_step2_B.png   parameters tuned on ideal: Step 1 realistic and each Step 2 variant
     fig_step2_C.png   parameters tuned on the depth they are tested on: the same rows
@@ -49,7 +37,7 @@ def label_of(variant):
     return f"+ correlated noise ({effect[4:]} px)"
 
 
-# ---------- reading and statistics (as in analyze_pose_experiment.py) ----------
+# ---------- reading and statistics ----------
 def read(path):
     with open(path, newline="") as f:
         rows = list(csv.DictReader(f))
@@ -225,7 +213,7 @@ for name, b, c in rows_tex:
 with open(os.path.join(args.exp, "results_table.tex"), "w") as f:
     f.write("\n".join(tex) + "\n")
 
-# ---------- figures: same style as fig_ablation.png ----------
+# ---------- figures ----------
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 CLASS_STYLE = {"bracket": dict(color="#2a78d6", marker="o"), "profile": dict(color="#eb6834", marker="s")}
 plt.rcParams.update({"font.size": 10, "axes.edgecolor": INK2, "axes.labelcolor": INK,

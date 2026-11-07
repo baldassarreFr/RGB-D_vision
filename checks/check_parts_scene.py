@@ -1,6 +1,6 @@
 """
-Puts a bracket and a profile on the table and look at them with the D435 camera (ideal depth).
-Then, checks that both parts are visible, and their top surfaces come out at the right height.
+Put a bracket and a profile on the table and look at them with the D435 camera (ideal depth);
+check that both parts are visible and that their top surfaces come out at the right height.
 """
 import os
 import numpy as np

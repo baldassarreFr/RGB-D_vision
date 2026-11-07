@@ -1,27 +1,26 @@
-"""M6: analysis of the pose experiment (reads evaluation.csv, writes tables and figures).
+"""
+Analysis of the pose experiment (reads evaluation.csv, writes tables and figures).
 
 Usage: python scripts/analyze_pose_experiment.py [--exp outputs/experiment]
+
 Conditions (rows of evaluation.csv):
     A = tuned on ideal, evaluated on ideal        (what ideal synthetic data promise)
     B = tuned on ideal, evaluated on realistic depth     (same pipeline and parameters)
     C = tuned on realistic, evaluated on realistic depth (camera modelled during development)
     (realistic = all effects of the D435i camera model)
+
 Writes in --exp:
     analysis.txt            everything printed below
     analysis.json           the same numbers, machine-readable
     results_table.tex       LaTeX rows for the report (A, B, C and the ablation)
-Figures (also copied to --figdir, default docs/figures, for the report and the README):
+
+Figures (also copied to --figdir, default docs/figures:
     fig_accuracy_centre.png share of parts with centre error below a threshold, A/B/C, per class
     fig_accuracy_adds.png   the same for ADD-S, up to the success threshold
     fig_conditions.png      AUC and median centre error of A, B, C with 95 % CI
     fig_ablation.png        the same for each single camera effect (parameters tuned on ideal)
-Statistics:
-    95 % confidence intervals by bootstrap over SCENES (parts of one scene are not independent):
-    2000 resamples of the evaluation scenes with replacement.
-    Paired comparison (same part in two conditions): how many parts change from success to
-    failure and back; exact McNemar test on those changes; median paired change of the centre
-    error.
 """
+
 import argparse
 import csv
 import json
@@ -230,8 +229,8 @@ for name in CONDITIONS:
 with open(os.path.join(args.exp, "results_table.tex"), "w") as f:
     f.write("\n".join(tex) + "\n")
 
-# ---------- figures (for the report and the README) ----------
-# Colours: validated categorical palette (slots 1-3), plus line style / marker as second cue.
+# ---------- figures ----------
+# Colours: blue / orange / green for A / B / C, with line style or marker as a second cue
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 COND_STYLE = {"A": dict(color="#2a78d6", ls="-", label="A  tuned on ideal, tested on ideal"),
               "B": dict(color="#eb6834", ls="-", label="B  tuned on ideal, tested on realistic"),

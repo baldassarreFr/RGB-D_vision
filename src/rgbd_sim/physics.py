@@ -1,24 +1,24 @@
 """Physics drop: let the parts fall on the table and settle, to get realistic resting poses.
 
-The physics engine only needs simple collision shapes, not the detailed meshes:
-- profile: one box (its slots do not change how it lies on a table);
-- bracket: two boxes, one per leg of the L. A single box, or the convex hull,
-  would fill the inside of the L and make the bracket rest in impossible poses.
+The physics engine uses simple collision shapes, not the detailed meshes:
+- for the profile: one box
+- for the bracket: two boxes, one per leg of the L.
 """
 import numpy as np
 import pybullet as p
 from trimesh.transformations import random_rotation_matrix, quaternion_from_matrix
 
 from rgbd_sim.parts import (MM, PROFILE_SIZE, PROFILE_LENGTH,
-                   BRACKET_LEG, BRACKET_THICKNESS, BRACKET_WIDTH)
+                            BRACKET_LEG, BRACKET_THICKNESS, BRACKET_WIDTH)
 
 ALUMINIUM_DENSITY = 2700.0      # kg/m^3
 TIME_STEP = 1.0 / 240.0         # PyBullet's default simulation step, in seconds
 RESTITUTION = 0.0               # bounciness of the parts: 0 = no bounce, 1 = perfectly elastic
 
-PART_FRICTION = 0.6             
-TABLE_FRICTION = 0.5            
-TABLE_RESTITUTION = 1.0        
+# Bullet multiplies the values of the two bodies in contact:
+PART_FRICTION = 0.6             # our choice, not measured: part-table 0.6 x 0.5 = 0.30, part-part 0.36
+TABLE_FRICTION = 0.5            # PyBullet's default
+TABLE_RESTITUTION = 1.0         # so that part-table restitution = RESTITUTION of the parts (x 1)
 
 # Where parts are dropped from (world x, y, metres): the central part of the camera view.
 DROP_X = (-0.15, 0.15)
@@ -69,7 +69,7 @@ def drop_parts(names, meshes, seed, max_seconds=10.0, restitution=RESTITUTION):
     p.setGravity(0, 0, -9.81, physicsClientId=client)
     plane = p.createCollisionShape(p.GEOM_PLANE, physicsClientId=client)
     table = p.createMultiBody(0, plane, physicsClientId=client)   # mass 0 = fixed: table top at z = 0
-    
+
     p.changeDynamics(table, -1, lateralFriction=TABLE_FRICTION, restitution=TABLE_RESTITUTION,
                      physicsClientId=client)
 
