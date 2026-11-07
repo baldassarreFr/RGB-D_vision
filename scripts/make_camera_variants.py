@@ -1,10 +1,15 @@
 """Apply the D435i camera model to every scene of the dataset, in every variant.
 
-Usage (after scripts/generate_dataset.py):  python scripts/make_camera_variants.py
-For each scene folder writes depth_<variant>.png next to depth.png (the ideal depth), for the
-variants in camera_model.VARIANTS. Same seed -> same result: the random numbers of a scene and
-variant come from (scene seed, variant number).
-Also writes, in the dataset folder:
+Usage (after scripts/generate_dataset.py):
+    python scripts/make_camera_variants.py [--dataset D]                  # Step 1 variants
+    python scripts/make_camera_variants.py [--dataset D] --set step2      # Step 2 variants
+    python scripts/make_camera_variants.py [--dataset D] --figure-only    # only redraw the figure
+For each scene folder writes depth_<variant>.png next to depth.png (the ideal depth).
+  step1: the variants in camera_model.VARIANTS; random numbers from (scene seed, variant number).
+  step2: the variants in camera_model.STEP2_VARIANTS, written to NEW files (depth_realistic_*.png);
+         no Step 1 file is touched. They use the same random numbers as "realistic", so each
+         differs from "realistic" only by its extra effect.
+Also writes, in the dataset folder (step2: names with "_step2"):
   camera_variants_summary.json   per variant: depth kept, typical error on table and parts
   camera_variants.png            one scene in every variant (close-up + 3D points from the front)
 """
@@ -17,50 +22,67 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from rgbd_sim.camera import backproject, camera_to_world
-from rgbd_sim.camera_model import VARIANTS, apply_camera
+from rgbd_sim.camera_model import STEP2_VARIANTS, VARIANTS, apply_camera
 from rgbd_sim.scene import load_scene, save_depth
 
 parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
 parser.add_argument("--dataset", default="outputs/dataset", help="dataset folder")
+parser.add_argument("--set", choices=["step1", "step2"], default="step1")
+parser.add_argument("--figure-only", action="store_true", help="first scene only, write no depth files")
 args = parser.parse_args()
 scene_dirs = sorted(os.path.join(args.dataset, "scenes", d)
                     for d in os.listdir(os.path.join(args.dataset, "scenes")))
+if args.figure_only:
+    scene_dirs = scene_dirs[:1]
+REALISTIC_INDEX = list(VARIANTS).index("realistic")
+if args.set == "step1":
+    VARIANT_SET = {name: (i, settings) for i, (name, settings) in enumerate(VARIANTS.items())}
+    suffix = ""
+else:
+    # "realistic" is recomputed for the figure only (never written); every Step 2 variant uses
+    # the random numbers of "realistic"
+    VARIANT_SET = {"realistic": (REALISTIC_INDEX, VARIANTS["realistic"]),
+                   **{name: (REALISTIC_INDEX, settings) for name, settings in STEP2_VARIANTS.items()}}
+    suffix = "_step2"
 
 # ---------- 1. Every scene, every variant ----------
-stats = {name: {"kept": [], "err_table": [], "err_parts": []} for name in VARIANTS}
+stats = {name: {"kept": [], "err_table": [], "err_parts": []} for name in VARIANT_SET}
 example = {}
 t0 = time.time()
 for folder in scene_dirs:
     scene = load_scene(folder)
     ideal, label = scene["depth"], scene["label"]
-    for i, (name, settings) in enumerate(VARIANTS.items()):
+    for name, (i, settings) in VARIANT_SET.items():
         rng = np.random.default_rng([scene["meta"]["seed"], i])
         depth = apply_camera(scene, rng=rng, **settings)
-        if name != "ideal":
+        write = name != "ideal" and not args.figure_only and (args.set == "step1" or name in STEP2_VARIANTS)
+        if write:
             save_depth(depth, os.path.join(folder, f"depth_{name}.png"))
         both = (ideal > 0) & (depth > 0)
         stats[name]["kept"].append(both.sum() / (ideal > 0).sum())
         error = np.abs(depth - ideal) * 1000
         stats[name]["err_table"].append(np.mean(error[both & (label == 1)]))
-        stats[name]["err_parts"].append(np.mean(error[both & (label >= 2)]))
+        parts = both & (label >= 2)
+        stats[name]["err_parts"].append(np.mean(error[parts]) if parts.any() else np.nan)
         if folder == scene_dirs[0]:
             example[name] = depth
     print(f"{folder}: done   [{time.time() - t0:.0f} s]")
 
 # ---------- 2. Summary over all scenes ----------
 summary = {}
-print(f"\n{'variant':10s} {'depth kept':>11s} {'mean error table':>17s} {'mean error parts':>17s}")
+print(f"\n{'variant':18s} {'depth kept':>11s} {'mean error table':>17s} {'mean error parts':>17s}")
 for name, st in stats.items():
-    summary[name] = {"settings": VARIANTS[name],
+    summary[name] = {"settings": VARIANT_SET[name][1],
                      "depth_kept_percent": 100 * float(np.mean(st["kept"])),
                      "mean_abs_error_table_mm": float(np.mean(st["err_table"])),
-                     "mean_abs_error_parts_mm": float(np.mean(st["err_parts"]))}
+                     "mean_abs_error_parts_mm": float(np.nanmean(st["err_parts"]))}
     s = summary[name]
-    print(f"{name:10s} {s['depth_kept_percent']:10.2f}% {s['mean_abs_error_table_mm']:14.2f} mm"
+    print(f"{name:18s} {s['depth_kept_percent']:10.2f}% {s['mean_abs_error_table_mm']:14.2f} mm"
           f" {s['mean_abs_error_parts_mm']:14.2f} mm")
 print("(error = |measured - ideal| on pixels that have depth in both; mean over scenes)")
-with open(os.path.join(args.dataset, "camera_variants_summary.json"), "w") as f:
-    json.dump(summary, f, indent=2)
+if not args.figure_only:
+    with open(os.path.join(args.dataset, f"camera_variants{suffix}_summary.json"), "w") as f:
+        json.dump(summary, f, indent=2)
 
 # ---------- 3. Figure: the first scene in every variant ----------
 scene = load_scene(scene_dirs[0])
@@ -85,4 +107,5 @@ for j, (name, d) in enumerate(example.items()):
 ax[1, 0].set_ylabel("height z [mm]")
 fig.suptitle(f"{scene_dirs[0]}: depth (top; white = no depth) and 3D points seen from the front (bottom)")
 plt.tight_layout()
-plt.savefig(os.path.join(args.dataset, "camera_variants.png"), dpi=110)
+plt.savefig(os.path.join(args.dataset, f"camera_variants{suffix}.png"), dpi=110, bbox_inches="tight")
+print(f"figure: {os.path.join(args.dataset, f'camera_variants{suffix}.png')}")

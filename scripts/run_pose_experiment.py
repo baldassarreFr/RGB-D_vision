@@ -5,6 +5,8 @@ Usage (after generating both datasets and their camera variants, see M5):
     python scripts/run_pose_experiment.py --tune-only       # stop after tuning (look at it first)
     python scripts/run_pose_experiment.py --skip-tuning     # reuse outputs/experiment/chosen.json
     python scripts/run_pose_experiment.py --rechoose --tune-only   # choose again from tuning.csv
+    python scripts/run_pose_experiment.py --set step2 --grid reduced   # Step 2 (sensitivity), in
+                                                     # outputs/step2; Step 1 files are not touched
     python scripts/run_pose_experiment.py --extend --tune-only     # run only the grid points
                                                      # missing from tuning.csv, then choose
 Phases:
@@ -38,7 +40,7 @@ from multiprocessing import Pool
 
 import numpy as np
 
-from rgbd_sim.camera_model import VARIANTS
+from rgbd_sim.camera_model import STEP2_VARIANTS, VARIANTS
 from rgbd_sim.metrics import (add_s, centre_error, diameter, metric_points, rotation_error,
                               success)
 from rgbd_sim.pose import estimate_pose_verified, model_point_cloud
@@ -50,6 +52,17 @@ VOXEL_GRID_MM = {"bracket": [2, 3, 4, 5, 6], "profile": [6, 8, 10, 12]}
 # on d = 8 with the AUC still rising (0.797, 0.806, 0.814, 0.822 at v = 4 mm).
 TOLERANCE_GRID_MM = {"bracket": [1, 2, 4, 8, 12, 16], "profile": [1, 2, 4, 8]}
 TUNED_ON = {"tuned_on_ideal": "ideal", "tuned_on_realistic": "realistic"}
+# Step 2 (sensitivity): tuning on each Step 2 variant; "reduced" drops the grid points that were
+# clearly worse in Step 1 (brackets v = 2 mm, d = 1 and 12 mm; profiles v = 12 mm)
+# "extended" = reduced + brackets v = 8 mm and d = 12, 24, 32 mm: with the reduced grid, the choice
+# for brackets fell on its upper corner (v = 6, d = 16) with the AUC still rising (same rule as in
+# Step 1, where d was extended to 16 mm). Run with --extend: only the new points are computed.
+STEP2_GRIDS = {"full": (VOXEL_GRID_MM, TOLERANCE_GRID_MM),
+               "reduced": ({"bracket": [3, 4, 5, 6], "profile": [6, 8, 10]},
+                           {"bracket": [2, 4, 8, 16], "profile": [1, 2, 4, 8]}),
+               "extended": ({"bracket": [3, 4, 5, 6, 8], "profile": [6, 8, 10]},
+                            {"bracket": [2, 4, 8, 12, 16, 24, 32], "profile": [1, 2, 4, 8]})}
+PLAN = {}                # what to tune and evaluate; filled in the main block (step1 or step2)
 MIN_POINTS = 10          # fewer measured points than this: no estimate (counted as failure)
 
 FIELDS = ["phase", "params", "variant", "scene", "instance_id", "cls", "visible_pixels",
@@ -159,11 +172,12 @@ def stats(rows):
 
 
 def tune(args):
+    vgrid, dgrid = PLAN["grids"]
     jobs = [("tuning", params, variant, folder, inst, cls, v, d)
-            for params, variant in TUNED_ON.items()
+            for params, variant in PLAN["tuned_on"].items()
             for folder in scene_folders(args.tune)
             for inst, cls in parts_of(folder)
-            for v in VOXEL_GRID_MM[cls] for d in TOLERANCE_GRID_MM[cls]]
+            for v in vgrid[cls] for d in dgrid[cls]]
     path = os.path.join(args.out, "tuning.csv")
     old = []
     if args.extend:                       # keep what is already there, run only the rest
@@ -189,17 +203,18 @@ def read_rows(path):
 
 def choose(rows, out):
     """Per parameter set and class: the (v, d) with the highest AUC. Prints the grids."""
+    vgrid, dgrid = PLAN["grids"]
     chosen = {}
-    for params in TUNED_ON:
+    for params in PLAN["tuned_on"]:
         chosen[params] = {}
-        for cls in VOXEL_GRID_MM:
+        for cls in vgrid:
             print(f"\n{params}, {cls}: AUC / success rate / median centre error (mm), "
                   f"v in rows, d in columns")
-            print("  v \\ d " + "".join(f"{d:>21d}" for d in TOLERANCE_GRID_MM[cls]))
+            print("  v \\ d " + "".join(f"{d:>21d}" for d in dgrid[cls]))
             best = None
-            for v in VOXEL_GRID_MM[cls]:
+            for v in vgrid[cls]:
                 line = f"  {v:5d} "
-                for d in TOLERANCE_GRID_MM[cls]:
+                for d in dgrid[cls]:
                     st = stats([r for r in rows if r["params"] == params and r["cls"] == cls
                                 and r["voxel_mm"] == v and r["tolerance_mm"] == d])
                     line += f"  {st['auc']:.3f}/{st['success_rate']:.2f}/{st['median_centre_mm']:4.1f}"
@@ -209,9 +224,9 @@ def choose(rows, out):
                 print(line)
             _, v, d, st = best
             chosen[params][cls] = {"voxel_mm": v, "tolerance_mm": d, **st}
-            edge = (v in (VOXEL_GRID_MM[cls][0], VOXEL_GRID_MM[cls][-1])
-                    or d in (TOLERANCE_GRID_MM[cls][0], TOLERANCE_GRID_MM[cls][-1]))
+            edge = (v in (vgrid[cls][0], vgrid[cls][-1]) or d in (dgrid[cls][0], dgrid[cls][-1]))
             print(f"  chosen: v = {v} mm, d = {d} mm" + ("   (on the edge of the grid)" if edge else ""))
+    chosen.update(PLAN.get("fixed_params", {}))     # Step 2: tuned_on_ideal from Step 1, unchanged
     with open(os.path.join(out, "chosen.json"), "w") as f:
         json.dump(chosen, f, indent=2)
     return chosen
@@ -222,42 +237,62 @@ def evaluate(args, chosen):
              chosen[params][cls]["voxel_mm"], chosen[params][cls]["tolerance_mm"])
             for folder in scene_folders(args.eval)
             for inst, cls in parts_of(folder)
-            for variant in VARIANTS for params in TUNED_ON]
+            for variant, params in PLAN["eval_pairs"]]
     print(f"\nEvaluation: {len(jobs)} jobs on {args.eval}")
     rows = run_all(jobs, args.workers, os.path.join(args.out, "evaluation.csv"), "evaluation")
 
     summary = {}
-    print(f"\n{'params':15s} {'variant':10s} {'class':8s} {'n':>4s} {'AUC':>6s} {'success':>8s} "
+    print(f"\n{'params':28s} {'variant':18s} {'class':8s} {'n':>4s} {'AUC':>6s} {'success':>8s} "
           f"{'ADD-S':>6s} {'centre':>7s} {'rot':>6s}  (medians, mm / deg)")
-    for params in TUNED_ON:
-        for variant in VARIANTS:
-            for cls in ["all"] + list(VOXEL_GRID_MM):
-                sel = [r for r in rows if r["params"] == params and r["variant"] == variant
-                       and (cls == "all" or r["cls"] == cls)]
-                s = stats(sel)
-                summary[f"{params}|{variant}|{cls}"] = s
-                print(f"{params:15s} {variant:10s} {cls:8s} {s['n']:4d} {s['auc']:6.3f} {s['success_rate']:8.3f} "
-                      f"{s['median_add_s_mm']:6.2f} {s['median_centre_mm']:7.2f} {s['median_rotation_deg']:6.1f}")
+    for variant, params in sorted(PLAN["eval_pairs"], key=lambda vp: (vp[1] != "tuned_on_ideal", vp)):
+        for cls in ["all", "bracket", "profile"]:
+            sel = [r for r in rows if r["params"] == params and r["variant"] == variant
+                   and (cls == "all" or r["cls"] == cls)]
+            s = stats(sel)
+            summary[f"{params}|{variant}|{cls}"] = s
+            print(f"{params:28s} {variant:18s} {cls:8s} {s['n']:4d} {s['auc']:6.3f} {s['success_rate']:8.3f} "
+                  f"{s['median_add_s_mm']:6.2f} {s['median_centre_mm']:7.2f} {s['median_rotation_deg']:6.1f}")
     with open(os.path.join(args.out, "summary.json"), "w") as f:
         json.dump(summary, f, indent=2)
-    a, b, c = (summary["tuned_on_ideal|ideal|all"], summary["tuned_on_ideal|realistic|all"],
-               summary["tuned_on_realistic|realistic|all"])
-    for name in ("auc", "success_rate"):
-        print(f"{name:12s}  A (ideal -> ideal): {a[name]:.3f}   B (ideal -> realistic): {b[name]:.3f}   "
-              f"C (realistic -> realistic): {c[name]:.3f}")
+    if PLAN["name"] == "step1":
+        a, b, c = (summary["tuned_on_ideal|ideal|all"], summary["tuned_on_ideal|realistic|all"],
+                   summary["tuned_on_realistic|realistic|all"])
+        for name in ("auc", "success_rate"):
+            print(f"{name:12s}  A (ideal -> ideal): {a[name]:.3f}   B (ideal -> realistic): {b[name]:.3f}   "
+                  f"C (realistic -> realistic): {c[name]:.3f}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--tune", default="outputs/dataset", help="tuning dataset")
     parser.add_argument("--eval", default="outputs/dataset_eval", help="evaluation dataset")
-    parser.add_argument("--out", default="outputs/experiment", help="output folder")
+    parser.add_argument("--out", default=None, help="output folder (default: outputs/experiment for "
+                        "step1, outputs/step2 for step2)")
+    parser.add_argument("--set", choices=["step1", "step2"], default="step1")
+    parser.add_argument("--grid", choices=["full", "reduced", "extended"], default="full",
+                        help="step2 tuning grid")
+    parser.add_argument("--step1-chosen", default="results/step1/chosen.json",
+                        help="step2: Step 1 parameters (tuned_on_ideal is reused for condition B)")
     parser.add_argument("--workers", type=int, default=os.cpu_count(), help="parallel processes")
     parser.add_argument("--tune-only", action="store_true")
     parser.add_argument("--skip-tuning", action="store_true", help="reuse chosen.json")
     parser.add_argument("--rechoose", action="store_true", help="choose again from tuning.csv")
     parser.add_argument("--extend", action="store_true", help="run only grid points missing from tuning.csv")
     args = parser.parse_args()
+    if args.set == "step1":
+        args.out = args.out or "outputs/experiment"
+        PLAN.update(name="step1", tuned_on=TUNED_ON, grids=(VOXEL_GRID_MM, TOLERANCE_GRID_MM),
+                    eval_pairs=[(v, p) for v in VARIANTS for p in TUNED_ON])
+    else:
+        # Step 2: B = Step 1's tuned_on_ideal on each new variant; C = tuned on that variant
+        args.out = args.out or "outputs/step2"
+        with open(args.step1_chosen) as f:
+            step1 = json.load(f)
+        tuned_on = {f"tuned_on_{v}": v for v in STEP2_VARIANTS}
+        PLAN.update(name="step2", tuned_on=tuned_on, grids=STEP2_GRIDS[args.grid],
+                    fixed_params={"tuned_on_ideal": step1["tuned_on_ideal"]},
+                    eval_pairs=[(v, p) for v in STEP2_VARIANTS for p in ("tuned_on_ideal", f"tuned_on_{v}")])
+        print(f"Step 2: {len(STEP2_VARIANTS)} variants, {args.grid} grid, B parameters from {args.step1_chosen}")
     os.makedirs(args.out, exist_ok=True)
 
     for cls, make in MAKE_PART.items():
