@@ -35,6 +35,8 @@ plt.rcParams.update({"font.size": 10, "axes.edgecolor": INK2, "axes.labelcolor":
 
 parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
 parser.add_argument("--eval", default="outputs/dataset_eval")
+parser.add_argument("--scene", default=None, help="scene for fig_scene.png, e.g. 000042 (default: first with both classes)")
+parser.add_argument("--only-scene", action="store_true", help="write fig_scene.png only")
 parser.add_argument("--exp", default="outputs/experiment")
 parser.add_argument("--figdir", default="docs/figures")
 parser.add_argument("--sample", type=int, default=30, help="parts per class for fig_error_axes")
@@ -117,6 +119,8 @@ if __name__ == "__main__":
     name = next(s for s in scene_dirs
                 if {o["class"] for o in load_scene(os.path.join(args.eval, "scenes", s))["meta"]["objects"]}
                 == {"profile", "bracket"})
+    if args.scene:
+        name = args.scene
     folder = os.path.join(args.eval, "scenes", name)
     scene = load_scene(folder)
     realistic = load_depth(folder, "realistic")
@@ -141,6 +145,9 @@ if __name__ == "__main__":
     fig.suptitle(f"Evaluation scene {name} (depth: darker = closer)", color=INK)
     plt.tight_layout()
     save(fig, "fig_scene.png")
+    
+    if args.only_scene:
+        raise SystemExit
 
     # ---------- 2. Pose estimation of a typical part, A and B ----------
     for cls in ("bracket", "profile"):
